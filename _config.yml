@@ -34,6 +34,12 @@ plugins:
   - jekyll-sitemap
   - jekyll-category-pages
 
+#禁用scss
+sass:
+  style: compressed
+exclude:
+  - assets/css/style.scss
+
 
 # 分类设置
 defaults:
