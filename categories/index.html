@@ -1,0 +1,49 @@
+---
+layout: default
+title: 文章分类
+---
+
+<div class="categories-page">
+  <div class="page-header">
+    <h1><i class="fas fa-folder-open"></i> 文章分类</h1>
+    <p>按分类浏览所有文章</p>
+  </div>
+  
+  <div class="category-labels">
+    {% for category in site.categories %}
+    <a href="#{{ category[0] | uri_escape }}" class="category-label">
+      {{ category[0] }} <span class="count">{{ category[1].size }}</span>
+    </a>
+    {% endfor %}
+  </div>
+  
+  <div class="category-sections">
+    {% for category in site.categories %}
+    <section id="{{ category[0] | uri_escape }}" class="category-section">
+      <div class="category-header">
+        <h2>{{ category[0] }}</h2>
+        <span class="category-count">{{ category[1].size }} 篇文章</span>
+      </div>
+      
+      <div class="category-posts">
+        {% for post in category[1] %}
+        <article class="category-post">
+          <div class="post-meta">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+          </div>
+          <h3 class="post-title">
+            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-excerpt">
+            {{ post.excerpt | strip_html | truncatewords: 15 }}
+          </div>
+          <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">阅读全文 <i class="fas fa-angle-right"></i></a>
+        </article>
+        {% endfor %}
+      </div>
+      
+      <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i> 返回顶部</a>
+    </section>
+    {% endfor %}
+  </div>
+</div>
