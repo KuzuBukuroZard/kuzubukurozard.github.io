@@ -19,7 +19,7 @@ bilibili_username: "5519569"
 
 # 网站URL
 url: https://kuzubukurozard.github.io/
-baseurl: ""
+baseurl: "kuzubukurozard.github.io"
 
 # 构建设置
 markdown: kramdown
