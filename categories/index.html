@@ -1,0 +1,96 @@
+---
+layout: default
+title: 文章分类
+---
+
+<div class="categories-page">
+  <div class="page-header">
+    <h1><i class="fas fa-folder-open"></i> 文章分类</h1>
+    <p>按分类浏览所有文章</p>
+  </div>
+  
+  <div class="category-labels">
+    {% assign sorted_categories = site.categories | sort %}
+    {% for category in sorted_categories %}
+      {% if category[0] != '测试' %}
+      <a href="#{{ category[0] | uri_escape }}" class="category-label">
+        {{ category[0] }} <span class="count">{{ category[1].size }}</span>
+      </a>
+      {% endif %}
+    {% endfor %}
+    
+    {% if site.categories['测试'] %}
+    <a href="#测试" class="category-label">
+      测试 <span class="count">{{ site.categories['测试'].size }}</span>
+    </a>
+    {% endif %}
+  </div>
+  
+  <div class="category-sections">
+    {% for category in sorted_categories %}
+      {% if category[0] != '测试' %}
+      <section id="{{ category[0] | uri_escape }}" class="category-section">
+        <div class="category-header">
+          <h2>{{ category[0] }}</h2>
+          <span class="category-count">{{ category[1].size }} 篇文章</span>
+        </div>
+        
+        <div class="category-posts">
+          {% for post in category[1] %}
+          <article class="post-card">
+            <div class="post-meta">
+              <span class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+            </div>
+            <h3 class="post-title">
+              <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+            </h3>
+            <div class="post-excerpt">
+              {% if post.description %}
+                {{ post.description }}
+              {% else %}
+                {{ post.excerpt | strip_html | truncatewords: 5 }}
+              {% endif %}
+            </div>
+            <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">阅读全文 <i class="fas fa-angle-right"></i></a>
+          </article>
+          {% endfor %}
+        </div>
+        
+        <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i> 返回顶部</a>
+      </section>
+      {% endif %}
+    {% endfor %}
+    
+    {% if site.categories['测试'] %}
+    <section id="测试" class="category-section">
+      <div class="category-header">
+        <h2>测试</h2>
+        <span class="category-count">{{ site.categories['测试'].size }} 篇文章</span>
+      </div>
+      
+      <div class="category-posts">
+        {% for post in site.categories['测试'] %}
+        <article class="post-card">
+          <div class="post-meta">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+          </div>
+          <h3 class="post-title">
+            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-excerpt">
+            {% if post.description %}
+              {{ post.description }}
+            {% else %}
+              {{ post.excerpt | strip_html | truncatewords: 5 }}
+            {% endif %}
+          </div>
+          <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">阅读全文 <i class="fas fa-angle-right"></i></a>
+        </article>
+        {% endfor %}
+      </div>
+      
+      <a href="#" class="back-to-top"><i class="fas fa-arrow-up"></i> 返回顶部</a>
+    </section>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,160 @@
+// 标题
+h1, h2, h3, h4, h5, h6 {
+    font-family: $heading-font;
+    font-weight: 700;
+    margin-bottom: $spacing-sm;
+    color: $secondary-color;
+    align-items: center;
+  }
+  
+  h1 {
+    font-size: 2.2rem;
+    
+    // 额外装饰
+    .site-title & {
+      font-family: $heading-font;
+      font-size: 2rem;
+      letter-spacing: 1px;
+      
+      a {
+        color: $secondary-color;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+  
+  h2 {
+    font-size: 1.8rem;
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+  }
+  
+  h4 {
+    font-size: 1.2rem;
+  }
+  
+  h5 {
+    font-size: 1.1rem;
+  }
+  
+  h6 {
+    font-size: 1rem;
+  }
+  
+  // 段落
+  p {
+    margin-bottom: $spacing-sm;
+    
+    &.intro {
+      font-family: $body-font;
+      font-size: 1.0rem;
+      color: $text-color;
+      margin: $spacing-md 0;
+      font-style: italic;
+      text-align: center;
+      line-height: 1.8;
+      position: relative;
+      padding: 0 $spacing-lg;
+      
+      &:before, &:after {
+        content: $medieval-leaf;
+        position: absolute;
+        font-size: 1rem;
+        color: $accent-color;
+      }
+      
+      &:before {
+        left: 0;
+        top: 0;
+      }
+      
+      &:after {
+        right: 0;
+        bottom: 0;
+      }
+    }
+  }
+  
+  // 列表
+  ul, ol {
+    margin-bottom: $spacing-md;
+    padding-left: $spacing-lg;
+  }
+  
+  // 引用
+  blockquote {
+    margin: $spacing-md 0;
+    padding: $spacing-md $spacing-lg;
+    border-left: 3px double $primary-color;
+    background-color: rgba($border-color, 0.1);
+    color: $text-color;
+    font-style: italic;
+    position: relative;
+    
+    &:before {
+      content: "";
+      font-family: $heading-font;
+      position: absolute;
+      top: 0;
+      left: 0.5rem;
+      font-size: 3rem;
+      color: $primary-color;
+      opacity: 0.3;
+    }
+  }
+  
+  // 代码块
+  code {
+    font-family: 'Courier New', monospace;
+    background-color: rgba($border-color, 0.2);
+    padding: 2px 4px;
+    border-radius: 3px;
+  }
+  
+  pre {
+    margin: $spacing-md 0;
+    padding: $spacing-sm;
+    background-color: rgba($border-color, 0.2);
+    border-radius: $border-radius;
+    overflow-x: auto;
+    
+    code {
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+  
+  // 加重和强调
+  strong, b {
+    font-weight: 700;
+    color: darken($text-color, 10%);
+  }
+  
+  em, i {
+    font-style: italic;
+  }
+  
+  // 装饰性代码
+  .handwritten {
+    transform: rotate(-1deg);
+    background-color: rgba(255, 255, 200, 0.4);
+    padding: $spacing-sm $spacing-md;
+    font-family: 'Noto Serif SC', serif;
+    border: 1px solid $footer-text;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.05);
+    position: relative;
+    margin: $spacing-lg 0 $spacing-lg $spacing-sm;
+    
+    &:before {
+      content: "";
+      position: absolute;
+      top: -5px;
+      left: 20px;
+      width: 30px;
+      height: 10px;
+      background-color: rgba($accent-color, 0.6);
+      border-radius: 3px;
+    }
+  }

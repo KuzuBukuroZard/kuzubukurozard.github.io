@@ -1,0 +1,61 @@
+// 颜色
+$primary-color: #8b5a2b;    // 深棕色
+$secondary-color: #4a3b27;  // 暗木色
+$accent-color: #a52a2a;     // 暗红色
+$text-color: #3a3a3a;       // 深灰色文字
+$light-text: #5a5a5a;       // 浅灰色文字
+$background-color: #f5f1e6; // 羊皮纸色
+$card-bg: #fbf8f1;          // 浅米色卡片背景
+$border-color: #d2b48c;     // 棕褐色边框
+$hover-color: #a0764c;      // 深金棕色悬停
+$footer-bg: #3a2d1f;        // 深棕黑色页脚
+$footer-text: #e6daca;      // 浅米色页脚文字
+
+// 字体
+$heading-font: 'Cinzel', 'Noto Serif SC', serif;
+$body-font: 'Cormorant Garamond', 'Noto Serif SC', serif;
+
+// 间距
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 1.5rem;
+$spacing-lg: 2rem;
+$spacing-xl: 2.5rem;
+$spacing-xxl: 3rem;
+
+// 边框
+$border-radius: 5px;
+$border-width: 1px;
+$border-width-thick: 2px;
+
+// 阴影
+$box-shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.05);
+$box-shadow-md: 0 3px 6px rgba(0, 0, 0, 0.1);
+$box-shadow-lg: 0 4px 8px rgba(0, 0, 0, 0.15);
+
+// 断点
+$breakpoint-sm: 576px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 992px;
+$breakpoint-xl: 1200px;
+
+// 过渡
+$transition-speed: 0.3s;
+$transition-easing: ease;
+
+// 容器
+$container-max-width: 1140px;
+$container-padding: 15px;
+
+// 背景
+$paper-texture: "https://www.transparenttextures.com/patterns/paper.png";
+$light-paper-texture: "https://www.transparenttextures.com/patterns/light-paper-fibers.png";
+$handmade-paper-texture: "https://www.transparenttextures.com/patterns/handmade-paper.png";
+$dark-wood-texture: "https://www.transparenttextures.com/patterns/dark-wood.png";
+$large-lether: "https://www.transparenttextures.com/patterns/large-leather.png";
+
+// 装饰符号
+$medieval-fleur: "⚜";
+$medieval-cross: "✙";
+$medieval-ornament: "❧";
+$medieval-leaf: "❦";

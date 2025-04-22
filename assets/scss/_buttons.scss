@@ -1,0 +1,137 @@
+// 基础按钮
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 0;
+    font-weight: 500;
+    text-align: center;
+    cursor: pointer;
+    transition: all $transition-speed $transition-easing;
+    font-family: $heading-font;
+    border: 1px solid $border-color;
+    @include button-hover;
+    
+    // 按钮变体
+    &.btn-primary {
+      background-color: $primary-color;
+      color: white;
+      border-color: $primary-color;
+    }
+    
+    &.btn-secondary {
+      background-color: $secondary-color;
+      color: white;
+      border-color: $secondary-color;
+    }
+    
+    &.btn-accent {
+      background-color: $accent-color;
+      color: white;
+      border-color: $accent-color;
+    }
+    
+    &.btn-outline {
+      background-color: transparent;
+      border: 1px solid currentColor;
+      
+      &.btn-primary {
+        color: $primary-color;
+      }
+      
+      &.btn-secondary {
+        color: $secondary-color;
+      }
+      
+      &.btn-accent {
+        color: $accent-color;
+      }
+    }
+    
+    // 按钮尺寸
+    &.btn-sm {
+      font-size: 0.85rem;
+      padding: 0.4rem 0.8rem;
+    }
+    
+    &.btn-lg {
+      font-size: 1.1rem;
+      padding: 0.8rem 1.6rem;
+    }
+    
+    // 按钮组
+    .btn-group & {
+      margin-right: $spacing-xs;
+      
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+  }
+  
+  // 阅读更多按钮
+  .read-more {
+    font-family: $heading-font;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: $primary-color;
+    @include link-hover-underline;
+  }
+  
+  // 回到顶部按钮
+  .back-to-top {
+    font-family: $heading-font;
+    display: inline-flex;
+    align-items: center;
+    margin-top: $spacing-md;
+    font-size: 0.9rem;
+    gap: 5px;
+    color: $primary-color;
+    transition: color $transition-speed $transition-easing;
+    
+    &:hover {
+      color: $accent-color;
+    }
+  }
+  
+  // 社交媒体图标按钮
+  .social-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: all $transition-speed $transition-easing;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    
+    &:hover {
+      background-color: $primary-color;
+      transform: translateY(-3px);
+    }
+  }
+  
+  // 按钮容器样式
+  .btn-container {
+    display: flex;
+    gap: $spacing-sm;
+    
+    &.btn-container-center {
+      justify-content: center;
+    }
+    
+    &.btn-container-end {
+      justify-content: flex-end;
+    }
+    
+    @include respond-to(sm) {
+      flex-direction: column;
+      
+      .btn {
+        width: 100%;
+      }
+    }
+  }

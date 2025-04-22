@@ -1,0 +1,56 @@
+title: "作死战士少年渣的车站"
+author: "作死战士少年渣(KuzuBukuro)"
+description: 
+  "作死战士少年渣的个人主页。<br>
+  1000个答案和1001个问题。"
+bio: 
+  '"For our frailty we suffer, as in birth—blind, and bathed in tears."<br>
+  "我们必将因不完美而蒙受苦难前行，就像我们闭着双眼以啼哭降世。"<br>
+  Welcome to KuzuBukuro’s personal blog. This is where I leave traces of what I’ve gathered from the vast ocean of words.<br>
+  欢迎来到作死战士少年渣的个人博客。此处是我在浩瀚文海之中拾遗后留下的记录。<br>
+  I’m drawn to the unknown, to all kinds of subcultures. I hope you’ll find something here that speaks to you.<br>
+  我喜欢未知，喜欢各种各样的亚文化。希望你能在此处，找到你想要的事物。'
+
+# 社交媒体账号
+email: "suicideking@163.com"
+github_username: "KuzuBukuroZard"
+twitter_username: "KuzuBukuroZard"
+bilibili_username: "5519569"
+
+# 网站URL
+url: https://kuzubukurozard.github.io/
+baseurl: ""
+
+# 构建设置
+markdown: kramdown
+permalink: /:year/:month/:day/:title/
+paginate: 6
+paginate_path: "/page:num/"
+
+sass:
+  sass_dir: assets/scss
+  style: compressed
+  sourcemap: never
+  load_paths:
+    - assets/scss
+  destination: assets/css
+
+# 插件
+plugins:
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-category-pages
+
+# 分类设置
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+
+category_pages:
+  layout: category_index
+  title_prefix: "分类："
+  permalink: /categories/:name/

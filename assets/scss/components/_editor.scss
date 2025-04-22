@@ -1,0 +1,108 @@
+.admin-panel {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  .editor-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    background-color: $card-bg;
+    @include paper-texture($handmade-paper-texture);
+    padding: 25px;
+    border: 1px solid $border-color;
+    box-shadow: $box-shadow-lg;
+    position: relative;
+    
+    &:before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 20px;
+      height: 20px;
+      border-top: 2px solid $accent-color;
+      border-left: 2px solid $accent-color;
+    }
+  
+    &:after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      border-bottom: 2px solid $accent-color;
+      border-right: 2px solid $accent-color;
+    }
+  }
+  
+  .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    
+    label {
+      font-family: $heading-font;
+      font-weight: 500;
+      color: $secondary-color;
+    }
+    
+    input, textarea {
+      padding: 10px 12px;
+      border: 1px solid $border-color;
+      background-color: rgba(255, 255, 255, 0.8);
+      font-family: $body-font;
+      font-size: 16px;
+      resize: vertical;
+    }
+  }
+  
+  .editor-wrapper {
+    border: 1px solid $border-color;
+    overflow: hidden;
+  }
+  
+  .editor-header {
+    padding: 12px 10px;
+    background-color: $background-color;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    
+    h3 {
+      font-family: $heading-font;
+      margin-bottom: 0;
+      font-size: 1.2rem;
+    }
+  }
+  
+  .editor-tools {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .editor-btn {
+    padding: 8px 16px;
+    background-color: $primary-color;
+    color: white;
+    border: 1px solid $primary-color;
+    cursor: pointer;
+    font-family: $heading-font;
+    transition: all $transition-speed $transition-easing;
+    
+    &:hover {
+      background-color: $hover-color;
+    }
+  }
+  
+
+  .EasyMDEContainer {
+    min-height: 500px;
+  }
+  
+  .CodeMirror {
+    height: 450px !important;
+  }

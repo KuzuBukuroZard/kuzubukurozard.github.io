@@ -1,0 +1,133 @@
+---
+layout: default
+title: 个人介绍
+---
+
+<div class="about-page">
+  <div class="page-header">
+    <h1><i class="fas fa-feather-alt"></i> <span class="zh">关于我</span><span class="en">About Me</span></h1>
+    {% include language-switcher.html %}
+  </div>
+  
+  <div class="about-content">
+    <div class="about-image">
+      <img src="{{ site.baseurl }}/assets/images/profile.jpg" alt="{{ site.author }}">
+    </div>
+    
+    <div class="about-text">
+      <h2 class="zh">你好，我是{{ site.author }}！<br></h2>
+      <h2 class="en">Hello, I'm {{ site.author }}!<br></h2>
+
+      <p class="intro zh">{{ site.bio }}</p>
+      <p class="intro en">{{ site.bio }}</p>
+      
+      <div class="about-sections">
+        <div class="about-section">
+          <h3><i class="fas fa-scroll"></i> <span class="zh">自我介绍</span><span class="en">Self Introduction</span></h3>
+          <p class="zh">
+            作死战士少年渣/KuzuBukuro/Zard<br>
+            目前全网同ID，你能找到的所有叫做这个名字的人应该都是我。<br>
+            主业是图书情报档案相关方向，目前身居中国，普通上班族。<br>
+            副业有很多——业余英文/日文翻译、业余平面设计者、<span class="term" data-description='虽然帮忙写过一些有用的东西，但大多数时间都是写给自己看的自娱自乐内容。因此，我是自主撰稿人，即"只为了自己而写作的自私鬼"。'>自主撰稿人</span>、编程爱好者，以及偶尔的慈善游戏代练。<br>
+            "兴趣使然"是一份礼物，也是一份诅咒。感谢他让我得到了如此之多的兴趣爱好，也让我的个人时间岌岌可危，让我的大脑乱七八糟。<br>
+          </p>
+          <p class="en">
+            You'll likely find me across the internet with this same ID—any account with this name is probably me.<br>
+            By profession, I work in the field of library, information, and archival studies, currently living in China as an ordinary office worker.<br>
+            On the side, I dabble in quite a few things—freelance translation (English/Japanese), amateur graphic design, <span class="term" data-description="While I've written some useful pieces for others, most of what I write is purely for my own amusement. That's why I call myself a self-directed writer—a selfish creature who writes only for themselves.">self-directed writing</span>, coding as a hobby, and occasionally, charity game boosting.<br>
+            "Driven by passion" is both a blessing and a curse. I'm grateful it's led me to so many interests, but it also leaves my free time hanging by a thread and my mind in constant chaos.<br>
+          </p>
+        </div>
+        
+        <div class="about-section">
+          <h3><i class="fas fa-dragon"></i> <span class="zh">兴趣爱好</span><span class="en">Interests and Hobbies</span></h3>
+          <p class="zh">
+            主要是打游戏。我想应该没人会喜欢自己的工作吧(笑)？虽然数据考古的确很有趣，但和我的工作不沾边。<br>
+            曾经的ACGN爱好者。已经很久没有接触过各种作品了，大概只剩下了一个游戏吧，当然，如果算上R18同人志，那还有漫画。<br>
+            TRPG爱好者。主要是DND 5e、COC 7th，以及一些小众日本TRPG。曾经是Ventangle的中文翻译者。<br>
+            射击游戏和RPG游戏。曾经的动视暴雪、育碧、贝塞斯达和SE大孝子。虽然现在不爱了，但是新游戏还是会上贡，谁让他们是我的白月光呢。<br>
+            挖掘游戏的各种Lore。我很喜欢上古卷轴、刺客信条和最终幻想相关的世界观Lore。<br>
+            编程爱好者。以Qt和Python为主，但目前已经很少使用Python了。<br>
+            写小说，创造故事。喜欢写一些剑与魔法的西幻故事，是的是的……我知道我是个死宅，但是我更喜欢《冰与火之歌》那样的传统西幻。<br>
+            当然，还有各种乱七八糟的色情东西。虽然在日常生活中我表现得冷淡而克制，但私下里是个相当乱七八糟的人。
+          </p>
+          <p class="en">
+            Mostly, I just play games. I mean, who actually likes their job, right? Data archaeology is pretty fascinating—but sadly, it has nothing to do with what I do for a living.<br>
+            I used to be a big ACGN fan. These days, I've drifted away from most works—except for the games that stuck with me. Well, if we're counting R18 doujinshi, then I guess there's still some manga too.<br>
+            I'm a TRPG enthusiast, mostly into D&D 5e, CoC 7th, and a few niche Japanese systems. I was once the Chinese translator for Ventangle.<br>
+            FPS and RPG games are my jam. I used to be a devoted fan of Activision Blizzard, Ubisoft, Bethesda, and Square Enix. I've kinda fallen out of love with them, but I still shell out for their new releases—guess they'll always be my first loves.<br>
+            I love digging into game lore—especially from The Elder Scrolls, Assassin's Creed, and Final Fantasy. Worldbuilding like that fascinates me.<br>
+            I'm also into programming, mostly with Qt and Python (though I rarely use Python these days).<br>
+            Writing stories and building worlds is another passion of mine. I like crafting sword-and-sorcery fantasy—yeah yeah, I know I'm a total NEET, but I'm more into classic Western fantasy like A Song of Ice and Fire.<br>
+            And of course, there's all sorts of chaotic lewd stuff too. I might come across as aloof and restrained in everyday life, but in private, I'm kind of a mess in the best (or worst) way.
+          </p>
+        </div>
+        
+        <div class="about-section">
+          <h3><i class="fas fa-book-open"></i> <span class="zh">博客内容</span><span class="en">Article Content</span></h3>
+          <p class="zh">
+            这里主要是一个投稿我日常随笔以及各种信息拾遗的地方。<br>
+            既起到了一个备忘录的功能，也希望有志趣相同的人能够找到共鸣或有用的信息。<br>
+            内容会相当天南海北：日常生活的感悟和思考、编程过程中的各种灵感发现、对于Lore的挖掘和推测、ACGN相关的评价、关于TRPG的杂文，以及更乱七八糟的东西。<br>
+            我的爱好十分复杂，以上提及的、和没有提及的内容都会包含。<br>
+            但请注意，以下内容绝对不会在我这里出现：<br>
+            - 政治相关。任何涉及时政的东西对我来说都是不可容忍的，极限就是讨论神秘学为主的宗教体系。<br>
+            - NTR相关。我非常、非常、非常讨厌任何形式的婚外恋和外遇行为。<br>
+            - 涉及隐私。请各位学会保护好自己的隐私，虽然我本人的身份几乎公开，但我不会主动透露。
+          </p>
+          <p class="en">
+            This space is mainly for sharing my personal musings and fragments of interesting information I've picked up along the way.<br>
+            It serves as a kind of memo for myself, but I also hope like-minded souls might find resonance—or at least something useful—here.<br>
+            The content will be all over the place: reflections on daily life, bursts of inspiration from coding, deep dives into lore and wild speculation, commentary on ACGN, essays about TRPGs, and all sorts of other shit.<br>
+            My interests are complex, and they go far beyond just what I've listed here—so expect a little bit of everything.<br>
+            <br>
+            That said, there are a few things you will never see on this blog:<br>
+            - Politics. I have zero tolerance for anything related to current affairs. At most, you might see discussions about religion in the context of mysticism or worldbuilding.<br>
+            - NTR. I absolutely, absolutely despise any form of cheating, infidelity, or extramarital affairs in fiction or reality.<br>
+            - Private information. Please be mindful of your own privacy. While my identity is more or less public, I won't share personal details proactively.
+          </p>
+        </div>
+      </div>
+      
+      <div class="contact-section">
+        <h3><i class="fas fa-feather"></i> <span class="zh">联系方式</span><span class="en">Contact Me</span></h3>
+        <p class="zh">
+          如果你对我的文章有任何问题或建议，或者想要与我交流，可以通过以下方式联系我，也包含了一些我在其他平台上的主页：
+        </p>
+        <p class="en">
+          If you have any questions or suggestions about my article, or would like to communicate with me, you can contact me through the following methods, which also include some of my homepages on other platforms:
+        </p>
+        <p>
+          <span class="zh">个人邮箱</span><span class="en">E-Mail</span>：{{ site.email }}<br>
+          <span class="zh">腾讯QQ</span><span class="en">Tencent QQ</span>：973498343<br>
+          Discord：kuzubukuro_zard<br>
+          FF14(?): <span class="zh">中国-陆行鸟-红玉海-少年渣</span><span class="en">CN-陆行鸟-红玉海-少年渣</span>
+        </p>
+        
+        <div class="contact-links">
+          {% if site.github_username %}
+          <a href="https://github.com/{{ site.github_username }}" target="_blank" class="contact-link">
+            <i class="fab fa-github"></i> GitHub
+          </a>
+          {% endif %}
+          
+          {% if site.twitter_username %}
+          <a href="https://twitter.com/{{ site.twitter_username }}" target="_blank" class="contact-link">
+            <i class="fab fa-twitter"></i> Twitter(X)
+          </a>
+          {% endif %}
+
+          {% if site.bilibili_username %}
+          <a href="https://space.bilibili.com/{{ site.bilibili_username }}" target="_blank" class="contact-link">
+            <i class="iconfont icon-Bzhan-zard"></i> <span class="zh">哔哩哔哩</span><span class="en">Bilibili</span>
+          </a>
+          {% endif %}
+        </div>
+        <div class="handwritten">
+          <span class="zh">最后更新于 2025年4月。</span>
+          <span class="en">Last updated April 2025.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

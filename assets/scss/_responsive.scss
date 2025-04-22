@@ -1,0 +1,124 @@
+// 中等屏幕 (平板)
+@include respond-to(md) {
+    .container {
+      width: 95%;
+      padding: 10px;
+    }
+    
+    h1 {
+      font-size: 1.8rem;
+    }
+    
+    h2 {
+      font-size: 1.5rem;
+    }
+    
+    h3 {
+      font-size: 1.3rem;
+    }
+    
+    p {
+      font-size: 0.95rem;
+    }
+    
+    .profile-card {
+      flex-direction: column;
+    }
+    
+    .profile-image {
+      flex: 0 0 auto;
+    }
+    
+    .posts-grid, .category-posts {
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    }
+    
+    .about-content:before,
+    .about-content:after,
+    .about-content .about-image:before,
+    .about-content .about-text:after {
+      font-size: 1rem;
+    }
+    
+    .contact-links {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .contact-link {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  // 小屏幕 (手机)
+  @include respond-to(sm) {
+    .container {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    body {
+      padding: 10px;
+    }
+  
+    h1 {
+      font-size: 1.6rem;
+    }
+    
+    h2 {
+      font-size: 1.3rem;
+    }
+  
+    .site-title {
+      margin-right: auto;
+      font-size: 1rem;
+    }
+  
+    .about-section {
+      padding: $spacing-sm;
+    }
+    
+    blockquote:before,
+    blockquote:after {
+      font-size: 2rem;
+    }
+    
+    .handwritten {
+      margin: $spacing-md 0;
+    }
+    
+    .profile-buttons {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+    
+    .btn {
+      width: 100%;
+    }
+    
+    .post-meta {
+      flex-direction: column;
+      gap: $spacing-xs;
+    }
+    
+    .category-labels {
+      justify-content: center;
+    }
+    
+    article.post {
+      padding: $spacing-md;
+      
+      h1 {
+        font-size: 1.5rem;
+      }
+      
+      .entry {
+        font-size: 1rem;
+      }
+    }
+    
+    .footer-content {
+      grid-template-columns: 1fr;
+    }
+  }

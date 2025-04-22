@@ -1,0 +1,113 @@
+// 全局样式
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  body {
+    font-family: $body-font;
+    line-height: 1.7;
+    color: $text-color;
+    background-color: $background-color;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    @include paper-texture($paper-texture);
+  }
+  
+  a {
+    color: $primary-color;
+    text-decoration: none;
+    transition: color $transition-speed $transition-easing;
+    
+    &:hover {
+      color: $hover-color;
+    }
+  }
+  
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .container {
+    max-width: $container-max-width;
+    width: 90%;
+    margin: 0 auto;
+    padding: 0 $container-padding;
+  }
+  
+  // 分隔线
+  hr {
+    border: 0;
+    height: 1px;
+    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), $primary-color, rgba(0, 0, 0, 0));
+    margin: $spacing-xl 0;
+    position: relative;
+    
+    &:before {
+      content: $medieval-ornament;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: $background-color;
+      padding: 0 15px;
+      color: $primary-color;
+      font-size: 1.5rem;
+    }
+  }
+  
+  // 网站内容区域
+  .site-content {
+    padding: $spacing-xxl 0;
+    min-height: calc(100vh - 300px);
+  }
+  
+  // 装饰图标样式
+  .medieval-icon {
+    font-family: 'Times New Roman', serif;
+    font-weight: normal;
+    
+    &.medieval-icon-fleur { content: $medieval-fleur; }
+    &.medieval-icon-cross { content: $medieval-cross; }
+    &.medieval-icon-ornament { content: $medieval-ornament; }
+  }
+  
+  // 页面通用标题
+  .page-header {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid $border-color;
+    @include flex(column, center, center);
+    
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: $spacing-xs;
+    }
+    
+    p {
+      color: $light-text;
+    }
+  }
+  
+  // 滚动条
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    background: $card-bg;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background: $border-color;
+    border-radius: $border-radius;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    background: $primary-color;
+  }

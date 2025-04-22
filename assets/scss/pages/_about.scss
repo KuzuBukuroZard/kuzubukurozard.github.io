@@ -1,0 +1,59 @@
+// 关于页面
+.about-page {
+  .page-header {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid $border-color;
+    @include flex(column, center, center);
+    
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: $spacing-xs;
+    }
+    
+    @include respond-to(md) {
+      margin-bottom: $spacing-md;
+      
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  }
+}
+  
+  // 关于内容区布局
+  .about-content {
+    display: flex;
+    gap: $spacing-xxl;
+    background-color: $card-bg;
+    padding: $spacing-xl;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-lg;
+    position: relative;
+    
+    &:after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 50%;
+      width: 1px;
+      background: linear-gradient(to bottom, 
+        rgba(0,0,0,0) 0%,
+        rgba(0,0,0,0.05) 20%,
+        rgba(0,0,0,0.1) 50%,
+        rgba(0,0,0,0.05) 80%,
+        rgba(0,0,0,0) 100%);
+    }
+    
+    @include respond-to(md) {
+      flex-direction: column;
+      padding: $spacing-md;
+      gap: $spacing-lg;
+      
+      &:after {
+        display: none;
+      }
+    }
+  }

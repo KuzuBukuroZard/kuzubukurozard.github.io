@@ -1,0 +1,68 @@
+// 分类页面布局
+.categories-page {
+  .page-header {
+    text-align: center;
+    margin-bottom: $spacing-lg;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid $border-color;
+    
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: $spacing-xs;
+    }
+    
+    p {
+      color: $light-text;
+    }
+  }
+}
+
+// 分类文章列表 - 复用posts-grid的样式
+.category-posts {
+  @extend .posts-grid;
+}
+
+// 分类区域布局
+.category-sections {
+  margin-top: $spacing-xl;
+}
+
+// 类别导航头部
+.category-header {
+  @include flex(row, space-between, center);
+  margin-bottom: $spacing-md;
+  padding-bottom: $spacing-xs;
+  border-bottom: 2px solid $border-color;
+  
+  h2 {
+    margin-bottom: 0;
+  }
+  
+  .category-count {
+    color: $light-text;
+    font-size: 0.9rem;
+  }
+}
+
+// 类别导航区域
+.category-section {
+  margin-bottom: $spacing-xxl;
+  padding-bottom: $spacing-lg;
+  border-bottom: 1px solid $border-color;
+}
+
+// 返回顶部链接
+.back-to-top {
+  font-family: $heading-font;
+  display: inline-flex;
+  align-items: center;
+  margin-top: $spacing-md;
+  font-size: 0.9rem;
+  gap: 5px;
+  color: $primary-color;
+  transition: color $transition-speed $transition-easing;
+  
+  &:hover {
+    color: $accent-color;
+  }
+}

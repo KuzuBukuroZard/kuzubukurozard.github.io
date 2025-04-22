@@ -1,0 +1,31 @@
+---
+layout: default
+---
+
+<div class="categories-page">
+    <div class="page-header">
+      <h1><i class="fas fa-folder-open"></i> {{ page.title }}</h1>
+      <p>按分类浏览所有文章</p>
+    </div>
+
+<div class="category-posts">
+  {% assign posts = site.categories[page.title] %}
+  {% for post in posts %}
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+      </div>
+      <h3 class="post-title">
+        <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+      </h3>
+      <div class="post-excerpt">
+        {% if post.description %}
+          {{ post.description }}
+        {% else %}
+          {{ post.excerpt | strip_html | truncatewords: 5 }}
+        {% endif %}
+      </div>
+      <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">阅读全文 <i class="fas fa-angle-right"></i></a>
+    </article>
+  {% endfor %}
+</div>

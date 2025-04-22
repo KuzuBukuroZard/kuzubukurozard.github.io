@@ -1,0 +1,87 @@
+---
+layout: default
+---
+
+<div class="home-page">
+  <!-- 个人介绍部分 -->
+  <section class="profile-section">
+    <div class="profile-card">
+      <div class="profile-image">
+        <img src="{{ site.baseurl }}/assets/images/profile.jpg" alt="{{ site.author }}">
+      </div>
+      <div class="profile-content">
+        <h2>{{ site.author }}</h2>
+        <p class="profile-bio">{{ site.bio }}</p>
+        <div class="profile-stats">
+          <div class="stat">
+            <span class="stat-value">{{ site.categories.size }}</span>
+            <span class="stat-label">分类</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value">{{ site.posts.size }}</span>
+            <span class="stat-label">文章</span>
+          </div>
+        </div>
+        <div class="profile-buttons">
+          <a href="{{ site.baseurl }}/about/" class="btn btn-primary">了解更多</a>
+          <a href="{{ site.baseurl }}/categories/" class="btn btn-secondary">文章分类</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- 最新文章部分 -->
+  <section class="recent-posts">
+    <div class="section-header">
+      <h2><i class="fas fa-newspaper"></i> 最新文章</h2>
+      <a href="{{ site.baseurl }}/categories/" class="view-all">查看全部 <i class="fas fa-angle-right"></i></a>
+    </div>
+    
+    <div class="posts-grid">
+      {% for post in site.posts limit:6 %}
+      <article class="post-card">
+        <div class="post-card-content">
+          <div class="post-meta">
+            <span class="post-date"><i class="far fa-calendar-alt"></i> {{ post.date | date: "%Y-%m-%d" }}</span>
+            {% if post.categories %}
+            <span class="post-categories">
+              <i class="fas fa-folder"></i>
+              {% for category in post.categories limit:1 %}
+              <a href="{{ site.baseurl }}/categories/#{{ category | slugify }}">{{ category }}</a>
+              {% endfor %}
+              {% if post.categories.size > 1 %}+{{ post.categories.size | minus: 1 }}{% endif %}
+            </span>
+            {% endif %}
+          </div>
+          <h3 class="post-title">
+            <a href="{{ site.baseurl }}{{ post.url }}">{{ post.title }}</a>
+          </h3>
+          <div class="post-excerpt">
+            {% if post.description %}
+              {{ post.description }}
+            {% else %}
+              {{ post.excerpt | strip_html | truncatewords: 5 }}
+            {% endif %}
+          </div>
+          <a href="{{ site.baseurl }}{{ post.url }}" class="read-more">阅读全文 <i class="fas fa-angle-right"></i></a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    
+    <!-- 分页导航 -->
+    {% if paginator.total_pages > 1 %}
+    <div class="pagination">
+      {% if paginator.previous_page %}
+        <a href="{{ paginator.previous_page_path | prepend: site.baseurl }}" class="previous"><i class="fas fa-chevron-left"></i> 上一页</a>
+      {% endif %}
+      
+      <span class="page-number">第 {{ paginator.page }} 页，共 {{ paginator.total_pages }} 页</span>
+      
+      {% if paginator.next_page %}
+        <a href="{{ paginator.next_page_path | prepend: site.baseurl }}" class="next">下一页 <i class="fas fa-chevron-right"></i></a>
+      {% endif %}
+    </div>
+    {% endif %}
+  </section>
+</div>

@@ -1,0 +1,156 @@
+// 分栏
+.two-column {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: $spacing-lg;
+    
+    @include respond-to(md) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  .three-column {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $spacing-lg;
+    
+    @include respond-to(md) {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  // 网格化
+  .grid {
+    display: grid;
+    gap: $spacing-lg;
+    
+    &.grid-2 {
+      grid-template-columns: repeat(2, 1fr);
+      
+      @include respond-to(md) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    &.grid-3 {
+      grid-template-columns: repeat(3, 1fr);
+      
+      @include respond-to(md) {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    &.grid-4 {
+      grid-template-columns: repeat(4, 1fr);
+      
+      @include respond-to(lg) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      @include respond-to(sm) {
+        grid-template-columns: 1fr;
+      }
+    }
+  }
+  
+  // 弹性布局
+  .flex {
+    display: flex;
+    
+    &.flex-center {
+      @include center;
+    }
+    
+    &.flex-between {
+      justify-content: space-between;
+    }
+    
+    &.flex-column {
+      flex-direction: column;
+    }
+    
+    &.flex-wrap {
+      flex-wrap: wrap;
+    }
+    
+    @include respond-to(md) {
+      &.flex-md-column {
+        flex-direction: column;
+      }
+    }
+  }
+  
+  // 内容间距
+  .section {
+    margin-bottom: $spacing-xxl;
+    
+    &.section-sm {
+      margin-bottom: $spacing-lg;
+    }
+    
+    &.section-lg {
+      margin-bottom: $spacing-xxl * 1.5;
+    }
+  }
+  
+  // 基础卡片
+  .card {
+    background-color: $card-bg;
+    @include paper-texture($light-paper-texture);
+    border: 1px solid $border-color;
+    border-radius: $border-radius;
+    box-shadow: $box-shadow-md;
+    padding: $spacing-md;
+  }
+  
+  // 部分标题
+  .section-header {
+    @include flex(row, space-between, center);
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-xs;
+    border-bottom: 2px solid $border-color;
+    
+    h2, h3 {
+      margin-bottom: 0;
+    }
+    
+    .view-all {
+      font-size: 0.9rem;
+      color: $light-text;
+      
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  
+  // 文本对齐
+  .text-center {
+    text-align: center;
+  }
+  
+  .text-left {
+    text-align: left;
+  }
+  
+  .text-right {
+    text-align: right;
+  }
+  
+  // 可见性
+  .hidden {
+    display: none;
+  }
+  
+  .visible {
+    display: block;
+  }
+  
+  // 清除浮动
+  .clearfix {
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }

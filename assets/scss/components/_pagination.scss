@@ -1,0 +1,76 @@
+// 分页导航
+.pagination {
+    @include flex(row, space-between, center);
+    margin-top: $spacing-xl;
+    padding-top: $spacing-sm;
+    border-top: 1px solid $border-color;
+    font-family: $heading-font;
+    
+    a {
+      color: $secondary-color;
+      transition: color $transition-speed $transition-easing;
+      position: relative;
+      
+      &:hover {
+        color: $accent-color;
+      }
+    }
+    
+    .page-number {
+      font-size: 0.9rem;
+      color: $light-text;
+      font-style: italic;
+    }
+  }
+  
+  // 分类标签导航
+  .category-labels {
+    @include flex(row, center, center, wrap);
+    gap: 12px;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .category-label {
+    background-color: $card-bg;
+    padding: $spacing-xs $spacing-sm;
+    border-radius: 0;
+    font-size: 0.9rem;
+    font-family: $heading-font;
+    @include flex(row, flex-start, center);
+    border: 1px solid $border-color;
+    @include button-hover;
+    
+    .count {
+      margin-left: 8px;
+      background-color: $primary-color;
+      color: white;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.5rem;
+      position: relative;
+      z-index: 1;
+    }
+  }
+  
+  // 类别导航头部
+  .category-header {
+    @include flex(row, space-between, center);
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-xs;
+    border-bottom: 2px solid $border-color;
+    
+    h2 {
+      margin-bottom: 0;
+    }
+    
+    .category-count {
+      color: $light-text;
+      font-size: 0.9rem;
+    }
+  }
+  
+  // 类别导航区域
+  .category-section {
+    margin-bottom: $spacing-xxl;
+    padding-bottom: $spacing-lg;
+    border-bottom: 1px solid $border-color;
+  }

@@ -1,0 +1,42 @@
+// 首页布局
+.home-page {
+    // 首页区域间距
+    section {
+      margin-bottom: $spacing-xxl;
+    }
+  }
+  
+  // 最新文章
+  .recent-posts {
+    .section-header {
+      @include flex(row, space-between, center);
+      margin-bottom: $spacing-md;
+      padding-bottom: $spacing-xs;
+      border-bottom: 2px solid $border-color;
+      
+      h2 {
+        margin-bottom: 0;
+      }
+      
+      .view-all {
+        font-size: 0.9rem;
+        color: $light-text;
+        
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+  
+  // 文章网格布局
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $spacing-lg;
+    margin-bottom: $spacing-lg;
+    
+    @include respond-to(sm) {
+      grid-template-columns: 1fr;
+    }
+  }

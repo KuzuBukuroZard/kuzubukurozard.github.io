@@ -1,0 +1,42 @@
+// 语言切换控制区
+.language-switch {
+    @include flex(row, center, center);
+    margin-top: $spacing-sm;
+    margin-bottom: $spacing-sm;
+  }
+  
+  // 语言切换按钮
+  .lang-btn {
+    background-color: $card-bg;
+    border: 1px solid $border-color;
+    padding: $spacing-xs $spacing-sm;
+    margin: 0 $spacing-xs;
+    cursor: pointer;
+    font-family: $heading-font;
+    transition: all $transition-speed $transition-easing;
+    
+    &.active {
+      background-color: $primary-color;
+      color: white;
+    }
+    
+    &:hover {
+      background-color: $hover-color;
+      color: white;
+    }
+  }
+  
+  // 默认语言显示控制
+  .zh {
+    display: inline-block;
+  }
+  
+  .en {
+    display: none;
+  }
+  
+  // 特殊元素的显示模式
+  h2.zh, h2.en, p.intro.zh, p.intro.en {
+    display: block;
+    text-align: center;
+  }
