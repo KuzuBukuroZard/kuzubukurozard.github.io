@@ -5,6 +5,7 @@
     color: $footer-text;
     padding: $spacing-xxl 0 $spacing-md;
     position: relative;
+    width: 100%;
     
     &:before {
       content: "";
@@ -24,6 +25,9 @@
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: $spacing-lg;
     margin-bottom: $spacing-lg;
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   // 页脚标题样式
@@ -91,4 +95,21 @@
     padding-top: $spacing-md;
     border-top: 1px solid rgba(255, 255, 255, 0.1);
     font-size: 0.9rem;
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  @include respond-to(sm) {
+    .site-footer {
+      padding: $spacing-lg 0 $spacing-sm;
+    }
+    
+    .footer-content {
+      padding: 0 15px;
+    }
+    
+    .footer-bottom {
+      padding: $spacing-md 15px 0;
+    }
   }

@@ -3,10 +3,13 @@
     background-color: $card-bg;
     @include paper-texture($large-lether);
     border-bottom: 2px solid $border-color;
+    width: 100%;
     
     .header-inner {
       @include flex(row, space-between, center);
       padding: $spacing-sm 0;
+      max-width: 95%;
+      margin: 0 auto;
     }
     
     .site-title {
@@ -119,7 +122,13 @@
       justify-content: space-between;
       align-items: center;
       position: relative;
+      width: 95%;
+      margin: 0 auto;
       padding: $spacing-sm 0;
+    }
+
+    .site-header {
+      width: 100%;
     }
     
     .site-title {
