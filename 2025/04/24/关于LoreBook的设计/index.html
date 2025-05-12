@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>关于LoreBook的设计 - 作死战士少年渣的车站</title>
+  <link rel="shortcut icon" href="/assets/images/favicon.png">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/assets/js/language-switcher.js"></script>
+  <script src="/assets/js/statistics.js"></script>
+  <link rel="stylesheet" href="/assets/scss/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4898901_nx6so5xjq5o.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome-icons@1.6.0/css/font-awesome-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+  /* 自定义中世纪装饰图标 */
+  .medieval-icon {
+    font-family: 'Times New Roman', serif;
+    font-weight: normal;
+  }
+  .medieval-icon-fleur { content: "⚜"; }
+  .medieval-icon-cross { content: "✙"; }
+  .medieval-icon-ornament { content: "❧"; }
+</style>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <h1 class="site-title"><a href="/">作死战士少年渣的车站</a></h1>
+        <nav class="site-nav">
+          <input type="checkbox" id="nav-toggle" class="nav-toggle">
+          <label for="nav-toggle" class="nav-toggle-label">
+            <span></span>
+          </label>
+          <ul class="nav-menu">
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-content">
+    <div class="container">
+      <article class="post">
+  <h1>关于LoreBook的设计</h1>
+
+  <div class="meta">
+    <span class="date">2025-04-24</span>
+    
+    <span class="categories">
+      分类:
+      
+      <a href="/category/%E9%85%92%E9%A6%86">酒馆</a>
+      
+    </span>
+    
+    <div class="language-switch">
+    <button id="zh-btn" class="lang-btn active">中文</button>
+    <button id="en-btn" class="lang-btn">English</button>
+  </div>
+    <div class="post-stats">
+      <div class="stat-item">
+        <i class="fas fa-eye"></i>
+        <span class="stat-label">阅读量：</span>
+        <span class="stat-count" id="busuanzi_value_page_pv"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="zh">
+<h2>什么是LoreBook以及可以实现的效果</h2>
+<p>写在最前面的免责说明：我对LLM的知识并不是专业的，大部分内容来源于我个人制作角色卡，以及使用各种LLM进行角色扮演中的体感，还有一些社区开发者的既有经验。阐述内容可能存在错误，如果有任何问题，请随时随意指出。</p>
+<p>以防万一，我再次重新阐述一次LLM注意力的内容：注意力机制是LLM的底层逻辑之一。即使LLM本身支持超长上下文，也会随着History的增长而逐渐丢失注意力。即使优秀的Claude、ChatGPT和Gemini也会犯这样的错误。这是无关算力、模型强度等外部因素的一个底层技术问题。</p>
+
+<h3>什么是LoreBook</h3>
+<p>LoreBook，在汉语中的直译为“传说书”，即相关设定的一个总结集。有一些设定可能与角色本身的Description部分无关，但对于让LLM理解你的整体世界观非常重要，作为一个触发锚点启用；或是以此来补充LLM的语料，起到一个外部微调的作用。</p>
+<p>例如：你可以在LLM中补充关于这个角色所在世界观的详细信息。倘若你的世界观当中存在某些更琐碎的设定，比如种族、城市、政权、宗教等详细内容，或是对于某个地域的具体描写。从性能上讲，这部分不应该加入到Description当中来分散LLM的注意力，同时也会因为内容冗长而导浪费耗过多Token。我们的预期是想要让这些信息在合适时间出现：比如提到某个种族、某个城市、某个宗教时，触发这个LoreBook条目来让LLM知道这段信息并应用到对话当中。</p>
+<p>另外一个例子：有一些更加复杂的编程效果，如果在Description当中直接导入而没有分割，也会导致LLM注意力分散而无法准确执行。最典型的就是角色卡内置的CoT，大多数复杂角色卡的CoT都是绑定在相关LoreBook当中来实现的。几乎所有的强化性功能也会如此实现：例如，用各种XML标签来包裹一些角色的细节描述，提示LLM抽取对应条目以增强文风效果；或者某些状态栏一类的代码：例如，<br />
+<blockquote>
+	<code>
+每当正文输出完毕后，在正文后方严格按照如下格式更新并输出状态栏<br />
+	--代码部分--<br />
+	</code>
+</blockquote>
+这样的代码块具有很好的LLM兼容性，大多数LLM都能正常执行。</p>
+
+<h3>给大忙人看的简易总结版</h3>
+<p>由于解释LoreBook的具体实现方式是一个非常枯燥乏味而且冗长的环节，所以我将实战部分提到了最前面来增强各位读者的“注意力”。如果你想真的系统性了解LoreBook的运作方式，也请先看完这部分，然后带着疑问继续阅读。</p>
+<ul>
+	<li><strong>CoT与功能代码：</strong>
+		<p>推荐设置：设置为常态触发（🔵），插入位置为@D，深度0，排序最大（数字最大），触发概率100%。这样可以确保这部分的内容在LLM中的注意力最大，几乎100%触发，此外不要忘记勾选防止进一步递归扫描的选项。</p>
+	</li>
+	<li><strong>角色设定增强：</strong>
+		<p>推荐设置：设置为常态触发(🔵)，插入位置为角色定义之后，排序较大，触发概率100%。作为增强角色的设定描述，贴合Description是最好的选择。</p>
+	</li>
+	<li><strong>其他项目（例如世界观设定和随机事件）：</strong>
+		<p>推荐设置：设置为关键词触发(🟢)，插入位置为@D，深度3~4，排序按顺序，触发概率100%，并且安排一个容易触发的关键词。这个顺序由你自己来决定，你觉得哪一部分的设定比较重要，你就让哪一部分更贴近底层。</p>
+	</li>
+</ul>
+<p>请牢记一个原则：关键词触发一定要足够简单。虽然这样也许不会起到节约Token的作用，但总比世界书成为摆设更好，不是吗？</p>
+<p>深度这个概念，你可以简单地理解为数字越小影响力越大。但也不要一股脑地堆在深度0处，更有层次感的堆叠会减轻LLM注意力的压力。至于顺序也起到了相似的功能，但它的数字越大，影响力越大。</p>
+
+<h2>在SillyTarvern中的完整版LoreBook的功能</h2>
+<p>LoreBook本身也是传送给LLM的Prompt之一。LoreBook能够实现的功能在前文中已经阐述过了，接下来我会说具体是如何实现这些功能的。</p>
+<ul>
+	<li><strong>插入位置：</strong>
+	<p>插入位置是指这段内容会被插入整个Prompt的何种位置。插入位置以如下几种选择作为分割点，以及他们可能会对LLM的output造成何种影响。</p>
+	   <ul>
+		    <li><strong>角色定义：</strong>角色定义就是角色的Description以及Scenario部分，插入到角色定义之后会对对话造成较大的影响。这一位置我推荐你插入一些关于角色的详细设定，例如特殊物品、强化角色特征的小介绍，因为这些紧贴角色的Description，会被LLM第二强的注意力集中点录入。</li>
+	 	    <li><strong>示例对话：</strong>示例对话是关于角色行为的指南。这部分内容其实在SillyTarvern整理的Prompt之中权重非常之低，我更推荐你将角色的行为指南整合到Description当中。我不建议你在这个部分插入任何重要的内容，因为它对LLM的影响真的很小。</li>
+		    <li><strong>作者注释：</strong>作者注释这一功能本来是为了长期聊天的角色卡节约Token而使用的。你可以在不修改角色卡本身的情况下，将前部分内容整理并插入到新一轮的对话当中。我不建议任何人使用这个功能，因为社区当中有更优秀的记忆和总结插件。而作者注释也有另外一个功能：它可以作为一个精确的锚点来决定LoreBook条目所在的位置，因此善用作者注释功能可以极大幅度增强LoreBook的效力，但由于这个需要对LLM与SillyTarvern逻辑的深度理解，所以暂时不提供关于这一部分的详细介绍。</li>
+		    <li><strong>@D：</strong>这是一个特殊的部分。如果使用这一插入位置，这部分的LoreBook会利用后续的“深度”设定来进行插入。而三个图标分别代表了它会被作为哪一部分插入：⚙️为作为System Prompt插入，👤作为User Prompt，而🤖作为AI助手的Prompt。三者有何区别我不会做过多解释，因为开发角色卡并不需要理解太多LLM的具体运作方式，只需要知道绝大多数情况下，我们都会使用System Prompt即可。</li>
+	   </ul>
+	</li>
+	<li><strong>深度与顺序：</strong>
+		<ul>
+			<li><strong>深度：</strong>深度与前文@D与作者注释有关。这一数字决定了你的LoreBook条目插入时，会位于对话的哪个位置。深度简单来说，就是从你最后一条消息开始，向上数第N条历史对话，这个N就是它在Prompt中出现的深度。换言之，深度越大，内容就会被推得越靠前，导致注意力越差。同时，深度为0就意味着它会直接插入到System Prompt之后，更贴近注意力集中的Prompt头，因此影响力也越大。</li>
+			<li><strong>顺序：</strong>顺序代表当深度或插入位置相同时，它们会以怎样的权重来<span class="term" data-description="闭嘴，不要问我深度和顺序都相同时会发生什么。我会杀了你的。">排序</span>。例如：在深度相同时，排序会按照1~1000的顺序排列在整个Prompt当中，顺序为1000 的那一条LoreBook最贴近注意力集中的Prompt尾，因此影响力也越大。</li>
+		</ul>
+	</li>
+	<li><strong>触发概率：</strong>
+		<p>这是一个我们几乎不会去考虑的项目。0意味着禁用，100%意味着一定触发，而50%就意味着会以1:1的概率触发。但……你要思考到程序随机数本身就不可靠，而且你大可以用<span class="term" data-description="比如说，请从以下条目中任选其一，将其融入到整个剧情当中。然后列出所有的可选项。">更直白的话语</span>来命令你的LLM去随机触发条目。所以我不建议你乱动这个东西，就让它是100%就好。事实上，我也没有尝试过这东西到底会起到什么作用。</p>
+	</li>
+	<li><strong>逻辑语句：</strong>
+		<p>字面意义，就是最基础的与门和非门。呃……除非你明白你在做什么，不然我不建议弄太复杂的LoreBook触发机制。LLM非常聪明，与其在这里进行外部编程，不如直接把你的需求告诉LLM，反正处理起来的算力消耗是相同的。</p>
+	</li>
+	<li><strong>其他杂七杂八的设置：</strong>
+		<ul>
+			<li><strong>粘性、冷却、延迟：</strong>字面意义，SillyTarvern当中已经有简单的描述了。但我不建议你使用这个功能，还是那句话：只要你使用的LLM足够强壮，这些东西都可以通过直白的文字来实现，除非你的规则真的很复杂，实现起来需要浪费大量的InputToken——其实，与其在SillyTarvern里外部编程，我更建议你直接写一个简单的Js脚本提供给LLM，这样也能节约很多Token，并且运行得更稳定。</li>
+		 	<li><strong>组：</strong>这是个很有趣的功能。它允许你使用更复杂的触发机制，例如触发大类别的时候，连锁触发小类别。其实本质上是一个外部编程工具，起到了节约Token的作用，和前文一样，使用自然语言或Js脚本都可以实现同样的效果，只是对于非专业人士而言，可读性会变得很差。</li>
+			<li><strong>防止递归相关的设置：</strong>基本是用于CoT的内容。因为CoT当中可能会使用一些特殊名词，为了防止误触，所以一般都会勾选防止进一步递归选项。其他的LoreBook条目除非你有特殊需求，否则我不建议你乱动这个内容。或者在关键词互相包含的触发条目中，勾选不可递归也是一个好习惯。</li>
+	  		<li><strong>全局世界书设置：</strong>恭喜你，已经你读到这里了。这意味着你即使不需要我的解释，你也可以看懂这部分的设置了——当然，我不建议你乱动其中的参数，SillyTarvern的默认参数已经足够优秀了。</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Chub当中的LoreBook</h2>
+<p>恭喜你，深呼吸一下吧，你已经读完了LoreBook的具体内容。接下来，我会介绍Chub当中LoreBook缺乏了哪些功能。如果你不想使用Chub，那么可以略过这一部分的阅读。</p>
+<ul>
+	<li><strong>基础设置：</strong>
+		<p>基础设置当中，Chub的世界书并不支持无限Token。虽然你可以随意输入，但聊天设置当中只支持最大8196的Token。这一点需要注意，所以请不要往Chub的角色卡里填入太多LoreBook内容。当然，你可以为SillyTarvern用户提供一份完整版的角色卡。</p>
+	</li>
+	<li><strong>世界书设置：</strong>
+		<p>这一部分的设置基本相同，Chub删除了一些我提到的<span class="term" data-description="粘性、延迟、组，等等。">不建议修改的内容</span>。Chub还不支持调整插入的位置，它永远默认是插入到角色定义之后的，但对于大部分角色卡来说，这是足够的了。</p>
+	</li>
+</ul>
+
+<p>关于LoreBook的介绍基本就是这样的了。具体角色书该如何编写，什么叫做格式化的代码，我也许以后会单独开一篇文章来介绍。</p>
+<p>时间太晚了……我该去睡觉了。</p>
+<div class="handwritten">
+<span>最后更新于 2025年4月25日。</span>
+</div>
+</div>
+
+  </div>
+</article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <h3>作死战士少年渣的车站</h3>
+          <p>作死战士少年渣的个人主页。<br> 1000个答案和1001个问题。</p>
+        </div>
+        <div class="footer-links">
+          <h3>链接</h3>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>社交媒体</h3>
+          <div class="social-icons">
+            
+            <a href="https://github.com/KuzuBukuroZard" target="_blank"><i class="fab fa-github"></i></a>
+            
+            
+            <a href="https://twitter.com/KuzuBukuroZard" target="_blank"><i class="fab fa-twitter"></i></a>
+            
+            
+            <a href="https://space.bilibili.com/5519569" target="_blank"><i class="iconfont icon-Bzhan-zard"></i></a>
+            
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"> 
+        <p>© 2025 KuzuBukuro. All right reserved.</p>
+        <div class="footer-stats">
+          <div class="stat-item">
+            <i class="fas fa-eye"></i>
+            <span class="stat-count" id="busuanzi_value_site_pv"></span> 次经过
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-user"></i>
+            <span class="stat-count" id="busuanzi_value_site_uv"></span> 位旅人
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
