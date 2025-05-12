@@ -15,8 +15,14 @@ layout: default
       {% endfor %}
     </span>
     {% endif %}
-
     {% include language-switcher.html %}
+    <div class="post-stats">
+      <div class="stat-item">
+        <i class="fas fa-eye"></i>
+        <span class="stat-label">阅读量：</span>
+        <span class="stat-count" id="busuanzi_value_page_pv"></span>
+      </div>
+    </div>
   </div>
 
   <div class="entry">

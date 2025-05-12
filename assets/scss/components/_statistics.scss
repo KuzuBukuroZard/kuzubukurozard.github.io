@@ -1,0 +1,84 @@
+// 统计信息样式
+.site-stats {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    margin: $spacing-md 0;
+    font-family: $heading-font;
+    color: $light-text;
+    font-size: 0.9rem;
+    
+    .stat-item {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      
+      i {
+        color: $primary-color;
+      }
+      
+      .stat-count {
+        color: $primary-color;
+        font-weight: 500;
+      }
+    }
+    
+    .stat-divider {
+      color: $border-color;
+      &:after {
+        content: $medieval-fleur;
+        font-size: 0.8rem;
+      }
+    }
+  }
+  
+  // 文章页
+  .post-stats {
+    text-align: center;
+    margin-top: $spacing-xs;
+    margin-bottom: $spacing-md;
+    font-size: 0.9rem;
+    color: $light-text;
+    font-style: italic;
+    
+    .stat-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 $spacing-xs;
+      
+      i {
+        color: $primary-color;
+      }
+      
+      .stat-count {
+        color: $primary-color;
+        font-weight: 500;
+      }
+    }
+  }
+  
+  // 页脚
+  .footer-stats {
+    text-align: center;
+    margin-top: $spacing-sm;
+    font-size: 0.85rem;
+    opacity: 0.8;
+    
+    .stat-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin: 0 $spacing-xs;
+      
+      i {
+        color: $footer-text;
+      }
+      
+      .stat-count {
+        color: $footer-text;
+      }
+    }
+  }
