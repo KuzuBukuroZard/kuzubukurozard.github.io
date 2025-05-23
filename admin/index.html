@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>文章编辑器 - 作死战士少年渣的车站</title>
+  <link rel="shortcut icon" href="/assets/images/favicon.png">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/assets/js/language-switcher.js"></script>
+  <script src="/assets/js/statistics.js"></script>
+  <link rel="stylesheet" href="/assets/scss/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4898901_nx6so5xjq5o.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome-icons@1.6.0/css/font-awesome-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+  /* 自定义中世纪装饰图标 */
+  .medieval-icon {
+    font-family: 'Times New Roman', serif;
+    font-weight: normal;
+  }
+  .medieval-icon-fleur { content: "⚜"; }
+  .medieval-icon-cross { content: "✙"; }
+  .medieval-icon-ornament { content: "❧"; }
+</style>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <h1 class="site-title"><a href="/">作死战士少年渣的车站</a></h1>
+        <nav class="site-nav">
+          <input type="checkbox" id="nav-toggle" class="nav-toggle">
+          <label for="nav-toggle" class="nav-toggle-label">
+            <span></span>
+          </label>
+          <ul class="nav-menu">
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-content">
+    <div class="container">
+      <div class="admin-panel">
+  <h1>文章编辑器</h1>
+  
+  <div class="editor-container" id="editor-container">
+    <div class="input-group">
+      <label for="post-title">文章标题:</label>
+      <input type="text" id="post-title" placeholder="标题">
+    </div>
+    
+    <div class="input-group">
+      <label for="post-categories">分类:</label>
+      <input type="text" id="post-categories" placeholder="分类">
+    </div>
+    
+    <div class="input-group">
+      <label for="post-date">发布日期:</label>
+      <input type="datetime-local" id="post-date">
+    </div>
+    
+    <div class="input-group">
+      <label for="post-description">文章描述:</label>
+      <textarea id="post-description" placeholder="简短描述（将显示在卡片预览中）" rows="2"></textarea>
+    </div>
+    
+    <div class="editor-wrapper">
+      <div class="editor-header">
+        <h3>Markdown编辑器</h3>
+        <div class="editor-tools">
+          <button id="save-md" class="editor-btn">保存为Markdown</button>
+        </div>
+      </div>
+      <textarea id="markdown-editor"></textarea>
+    </div>
+  </div>
+</div>
+
+<!-- 引入EasyMDE -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.css">
+<script src="https://cdn.jsdelivr.net/npm/easymde/dist/easymde.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // 设置默认日期为当前时间
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    
+    document.getElementById('post-date').value = `${year}-${month}-${day}T${hours}:${minutes}`;
+    
+    // 初始化EasyMDE编辑器
+    const easyMDE = new EasyMDE({
+      element: document.getElementById('markdown-editor'),
+      autofocus: true,
+      spellChecker: false,
+      status: ['lines', 'words', 'cursor'],
+      toolbar: [
+        'bold', 'italic', 'heading', 'strikethrough', '|',
+        'code', 'quote', 'unordered-list', 'ordered-list', '|',
+        'link', 'image', 'table', 'horizontal-rule', '|',
+        'preview', 'side-by-side', 'fullscreen', '|',
+        {
+          name: "custom-html",
+          action: function customFunction(editor){
+            const cm = editor.codemirror;
+            const output = '<div style="color: red; font-size: 16px;">自定义HTML</div>';
+            cm.replaceSelection(output);
+          },
+          className: "fa fa-code",
+          title: "插入HTML",
+        },
+        {
+          name: "custom-css",
+          action: function customFunction(editor){
+            const cm = editor.codemirror;
+            const selection = cm.getSelection();
+            const output = `<span style="color: blue;">${selection || '文本'}</span>`;
+            cm.replaceSelection(output);
+          },
+          className: "fa fa-paint-brush",
+          title: "添加CSS样式",
+        }
+      ],
+      shortcuts: {
+        "toggleBold": "Ctrl-B",
+        "toggleItalic": "Ctrl-I",
+        "drawLink": "Ctrl-K",
+        "toggleHeadingSmaller": "Ctrl-H",
+        "toggleCodeBlock": "Ctrl-Alt-C",
+        "drawImage": "Ctrl-Alt-I",
+        "toggleUnorderedList": "Ctrl-L",
+        "toggleOrderedList": "Ctrl-Alt-L",
+        "togglePreview": "Ctrl-P"
+      },
+      previewRender: function(plainText) {
+        return marked.parse(plainText); // 使用marked进行预览渲染
+      }
+    });
+    
+    // 保存为Markdown文件
+    document.getElementById('save-md').addEventListener('click', function() {
+      const title = document.getElementById('post-title').value.trim();
+      if (!title) {
+        alert('请输入文章标题');
+        return;
+      }
+      
+      const dateInput = document.getElementById('post-date').value;
+      if (!dateInput) {
+        alert('请选择发布日期');
+        return;
+      }
+      
+      // 获取编辑器内容
+      const content = easyMDE.value().trim();
+      if (!content) {
+        alert('文章内容不能为空');
+        return;
+      }
+      
+      // 获取描述
+      const description = document.getElementById('post-description').value.trim();
+      
+      // 解析分类
+      const categoriesInput = document.getElementById('post-categories').value.trim();
+      let categoriesArray = [];
+      if (categoriesInput) {
+        categoriesArray = categoriesInput.split(',').map(cat => cat.trim());
+      }
+      const categoriesStr = JSON.stringify(categoriesArray);
+      
+      // 格式化日期
+      const postDate = new Date(dateInput);
+      const formattedDate = postDate.toISOString().replace('T', ' ').substring(0, 19) + ' +0800';
+      
+      // 生成文件名
+      const fileDate = postDate.toISOString().slice(0, 10);
+      const fileName = `${fileDate}-${title.replace(/\s+/g, '-')}.md`;
+      
+      // 生成Front Matter，包含description字段
+      let frontMatter = `---
+layout: post
+title: "${title}"
+date: ${formattedDate}
+categories: ${categoriesStr}`;
+
+      // 仅当有描述时才添加description字段
+      if (description) {
+        frontMatter += `\ndescription: "${description}"`;
+      }
+      
+      frontMatter += `\n---\n\n${content}`;
+      
+      // 创建并下载文件
+      const blob = new Blob([frontMatter], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = fileName;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+  });
+</script>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <h3>作死战士少年渣的车站</h3>
+          <p>作死战士少年渣的个人主页。<br> 1000个答案和1001个问题。</p>
+        </div>
+        <div class="footer-links">
+          <h3>链接</h3>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>社交媒体</h3>
+          <div class="social-icons">
+            
+            <a href="https://github.com/KuzuBukuroZard" target="_blank"><i class="fab fa-github"></i></a>
+            
+            
+            <a href="https://twitter.com/KuzuBukuroZard" target="_blank"><i class="fab fa-twitter"></i></a>
+            
+            
+            <a href="https://space.bilibili.com/5519569" target="_blank"><i class="iconfont icon-Bzhan-zard"></i></a>
+            
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"> 
+        <p>© 2025 KuzuBukuro. All right reserved.</p>
+        <div class="footer-stats">
+          <div class="stat-item">
+            <i class="fas fa-eye"></i>
+            <span class="stat-count" id="busuanzi_value_site_pv"></span> 次经过
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-user"></i>
+            <span class="stat-count" id="busuanzi_value_site_uv"></span> 位旅人
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

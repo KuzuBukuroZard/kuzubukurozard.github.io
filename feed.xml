@@ -1,0 +1,789 @@
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" ><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://kuzubukurozard.github.io//feed.xml" rel="self" type="application/atom+xml" /><link href="https://kuzubukurozard.github.io//" rel="alternate" type="text/html" /><updated>2025-05-23T00:06:37+00:00</updated><id>https://kuzubukurozard.github.io//feed.xml</id><title type="html">作死战士少年渣的车站</title><subtitle>作死战士少年渣的个人主页。&lt;br&gt; 1000个答案和1001个问题。</subtitle><author><name>作死战士少年渣(KuzuBukuro)</name></author><entry><title type="html">【网络工程】如何肘赢Adobe验证</title><link href="https://kuzubukurozard.github.io//2025/05/11/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B-%E5%A6%82%E4%BD%95%E8%82%98%E8%B5%A2Adobe%E9%AA%8C%E8%AF%81/" rel="alternate" type="text/html" title="【网络工程】如何肘赢Adobe验证" /><published>2025-05-11T16:36:00+00:00</published><updated>2025-05-11T16:36:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/05/11/%E3%80%90%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B%E3%80%91%E5%A6%82%E4%BD%95%E8%82%98%E8%B5%A2Adobe%E9%AA%8C%E8%AF%81</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/05/11/%E7%BD%91%E7%BB%9C%E5%B7%A5%E7%A8%8B-%E5%A6%82%E4%BD%95%E8%82%98%E8%B5%A2Adobe%E9%AA%8C%E8%AF%81/"><![CDATA[<div class="zh">
+<blockquote>
+这部分内容仅在Windows11 24H2 LTSC 64位上进行了测试。Windows环境应该是正常使用的，但Linux或Mac等环境我不保证是否可以使用。<br />
+<strong>其实我觉得是可以的，毕竟Clash应该有其他版本吧……？这个也不依赖修改Hosts或者什么别的东西，但GenP这个我是真不知道。</strong><br />
+这篇文章最后更新于2025年5月12日，截止今日，该方法仍然有效。如果失效，我会及时在这里进行更新。
+</blockquote>
+<h2>关于Adobe验证的二三事</h2>
+<p>这部分是介绍Adobe是如何进行验证的。</p>
+<p>首先，Adobe会拉取官网的主要验证方式，即试图访问<code>ic.adobe.io</code>这个地址进行第一步的验证。</p>
+<p>然后第二步是就在最近时间(25年5月)，Adobe又增加了一个用户协议地址<code>cc-api-data.adobe.io</code>，这个会在打开Adobe软件时弹出一个用户协议，无论你是否同意它都会借此进行验证。</p>
+<p>最后第三步是Adobe每隔一段时间就会自动生成一个随机域名来尝试进行验证，一般格式包括：</p>
+<ul>
+    <li>0mo5a70cqa.adobe.io这样的<code>10位随机组合.adobe.io</code>的组合</li>
+    <li>0bj2epfqn1.adobestats.io这样的<code>10位随机组合.adobestats.io</code>的组合</li>
+    <li>qivgqug798p.7cnli.adobestats.io这样的<code>8~12位随机组合.5位随机组合.adobestats.io</code>的组合</li>
+</ul>
+<p>除此之外，Adobe官方的Creative Cloud以及万恶的Genuine Service也会有正版验证的功能。但验证渠道走的都是跟上面相同的办法，你不主动打开这两个软件进行本地校验的话也不会触发验证，至于如何删除AGS，后面会提到。</p>
+<p>近期Adobe越来越丧心病狂，几乎每天他们上班第一件事就是生成一个随机验证地址来进行验证。虽然可以在<a href="https://a.dove.isdumb.one/list.txt">这个网址</a>查看民间提供的DNS列表，但天天跟Adobe斗智斗勇又不太方便，而且说不定有的人需要Hosts的修改，例如SteamCommunity之类的场合。截止2025年5月12日，这个网站已经收录了2191条用于验证的网址了，这对于你的Hosts文件而言是一个较大的负担，而且大多数使用到DNS规则的程序都会直接覆写Hosts文件，非常的不方便。</p>
+<p>所以，我写了这篇文章，教大家如何战胜Adobe的本地验证。真不是我想用盗版软件，是因为Adobe的订阅价格实在是太贵了，而且不订阅根本不给你用，对于一些并不是经常使用Adobe进行设计的人而言太过不值得。在此先和伟大的John Warnock道个歉，希望你能尽早说服上帝用硫磺火砸了这个没有开源精神的地球。</p>
+<p>请注意，使用破解版的Adobe软件是无法使用Adobe官方提供的素材库以及AI生成服务的。阻止这些验证地址并不会影响你正常使用Adobe的软件，但由于你并没有正版许可的账号，所以你也无法访问素材库、AI生成和工作平台等功能。在此笔者也鼓励各位真正有需求的平面设计师或视频编辑师购买正版许可。在有盈利的情况下，某些渠道下的正版的Adobe许可价格其实可以接受，也更符合法律规定与道德准则。</p>
+<h2>所需要的软件</h2>
+<p>首先我们需要一个优秀的流量反代理软件，在此我推荐并要求必须只能使用Clash，项目地址<a href="https://github.com/clash-verge-rev/clash-verge-rev">在这里</a>。这是一个民间维护的Clash版本，叫做Clash-verge-rev。本质上是优化了Clash内核并给了一个用户友好的GUI页面，使用起来非常简洁和强大。求求你们不要再用已经停止更新的SSR相关了，还有那些问某某VPN的也不要找我。</p>
+<p>其次是一个Adobe验证工具，叫做Adobe GenP，项目地址<a href="https://github.com/wangzhenjjcn/AdobeGenp">在这里</a>。这个在互联网上都有很多教程，具体该如何使用这篇文章不会做过多介绍。作者在25年4月25日最新一次Releases中增加了由其他作者提供的反弹出补丁，可以阻止Adobe弹出“请停止使用无授权版本软件”的红色弹框。但即使有这个补丁，我也推荐大家尽量阻止Adobe进行在线验证，以防Adobe官方让这个补丁失效得太快。</p>
+<h2>具体操作流程</h2>
+<p>首先，你需要使用Adobe GenP来为你的Adobe软件打上破解补丁和反弹出补丁。具体该如何使用请参考其他人的视频，至于反弹出补丁则是在Pop-up Tools选项卡下的WinTrust部分，这个具体功能是如何实现的我们在后文原理部分会进行介绍。当然，如果你是第一次通过Creative Cloud安装Adobe相关组件，也不要忘记卸载AGS与禁止任何Adobe相关进程的开机自启动。</p>
+<p>其次，我们需要打开Clash，在“订阅”选项卡下，选择全局扩展脚本，右键点击编辑文件，并且将其中内容替换为以下代码。</p>
+<blockquote>
+<code>
+function main(config, profileName) {<br />
+  if (!config || typeof config !== 'object') {<br />
+    config = {};<br />
+  }<br />
+<br />
+  if (!Array.isArray(config.rules)) {<br />
+    config.rules = [];<br />
+  }<br />
+<br />
+  config?.rules.unshift(<br />
+    "DOMAIN-SUFFIX,ic.adobe.io,REJECT-DROP",<br />
+    "DOMAIN-SUFFIX,cc-api-data.adobe.io,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{10}\\.adobe\\.io$,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{10}\\.adobestats\\.io$,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{8,12}\\.[a-z0-9]{5}\\.adobestats\\.io$,REJECT-DROP"<br />
+  );<br />
+<br />
+  return config;<br />
+}<br />
+</code>
+</blockquote>
+<p>之后，点击保存，关闭Clash并重新启动，就已经完成了对Adobe正版验证的阻拦了。</p>
+<p>目前，截止北京时间2025年5月12日，这个方式仍然有效。如果后续失效，请随时联系我，我会更新代码。</p>
+<h2>对于刨根问底者的原理解答</h2>
+<p>好吧，既然你已经看到了这里，那就说明你对我不信任，或是好奇这些代码的用途是什么。首先这不算恶意代码，只是一个简单的正则过滤语句，用于告知Clash该阻拦哪些域名。本质上，修改DNS的办法是将Adobe验证地址重新用<code>0.0.0.0</code>空IP重定向，导致无法访问进而阻止验证。Clash作为一个流量反代理工具，也是有相同的功能的。</p>
+<p>那么，我们首先来分解这段代码的作用。这是一个JavaScript代码，是常见的后端脚本语言。</p>
+<p>第一部分是函数头，声明了一个叫做<code>main</code>的函数，并传递了<code>config</code>这一配置对象与<code>profileName</code>这两个参数。</p>
+<p>根据一些人的反馈，笔者在此处增加了两个逻辑语句。第一段的<code>!config</code>的作用是判断<code>config</code>参数是否为<code>null</code>或<code>undifined</code>或<code>false</code>等假值，而<code>typeof config !== 'object'</code>是判断<code>config</code>是否为正确的对象类型，若不是则将其重置为空对象(<code>{}</code>)。第二个逻辑语句中，<code>Array.isArray(config.rules)</code>的作用是判断<code>config.rules</code>是否为数组类型(<code>Array</code>)，否则为其执行正确的赋值。简言之，这段代码是一种防御性编程，严格确保了用户在没有订阅代理供应商时，因不存在<code>config</code>或<code>config.rule</code>而导致的报错或程序崩溃。</p>
+<p>接下来是具体实现的部分，第二行代码的作用是通过可选链操作符<code>.?</code>安全访问<code>config.rules</code>数组，并通过<code>unshift()</code>方法安全地在数组头部插入如下新规则。</p>
+<p>最后是正常的验证返回函数<code>return config</code>与函数闭合。</p>
+<p>需要着重解释的是这段正则表达语句。</p>
+<p>首先，我们来解释一下<code>DOMAIN-SUFFIX</code>(域名后缀匹配)与<code>DOMAIN-REGEX</code>(正则表达匹配)的作用。这个代码的完整语法是这样的：<code>"匹配方式,&lt;后缀或正则&gt;,&lt;动作&gt;"</code>。其中，前者是匹配符合这个字符串末端的所有域名；而后者是匹配符合正则表达式的所有域名。我们注意到，<code>ic.adobe.io</code>与<code>cc-api-data.adobe.io</code>属于带有特征的独立域名，因此我们使用了后缀匹配来进行过滤，而自动生成的乱码域名，就需要通过正则表达式来进行过滤。同样，还有一个<code>DOMAIN</code>的匹配方式，但由于这个严格要求匹配对应地址，使用起来较为麻烦而且限制性较大，所以我们通常不使用它。</p>
+<p>接下来是关于正则表达式语法的介绍。其中，<code>(?i)</code>的作用是忽略字符串中的大小写区分，虽然目前Adobe并没有丧心病狂到启用大小写，但为了未来着想，我还是选择使用了这个表达式来进行过滤。<code>[a-z0-9]</code>意为这是一串含有小写字母a~z和数字0~9的随机字符串，例如<code>a0b1c2d3e4f5g6</code>。<code>{8,12}</code>规定了这个字符串的长度在8位到12位之间，后续的<code>{10}</code>等则是精确要求了长度必须为10位。而<code>\\.</code>意味着匹配域名分隔符<code>.</code>——这里需要进行解释，在正则表达式中，反斜杠代表转义。因为在汇编语言里，某些富有具有明确意义，直接输入可能会引起代码混淆，因此需要用反斜杠来进行转义；而两个反斜杠则是对转义的转义，因为在汇编语言当中，反斜杠本身也是特殊符号。最后，<code>^</code>与<code>$</code>的含义是精确头尾匹配，即正则语句在这两个符号的包裹下即为完整，不会过滤更多级域名。</p>
+<p>很多看到这里，并且有自己的想法的朋友们会意识到一件事：这段代码只过滤了三种类型。是的，的确如此，因为目前Adobe的随机数生成仅限于这种情况。请注意，即使是这三种域名，目前也已经涵盖了总共<code>62<sup>10</sup>(2+62<sup>3</sup>+62<sup>4</sup>+62<sup>5</sup>+62<sup>6</sup>+62<sup>7</sup>)</code>种组合，求对数可知大概为10<sup>33</sup>的数量级，即百万亿亿亿级的数字。等到Adobe真的穷举完了这些随机项目的那一天，宇宙估计都已经热寂了，所以完全可以不用担心域名会用完的问题。</p>
+<p>当然，我们不排除Adobe会丧心病狂到增加新的种类，例如更多级的域名或特殊符号。看了这篇文章的各位读者可以自己尝试写一个新的域名过滤正则，或是等待我进行后续更新。</p>
+<div class="handwritten">
+    <span>最后更新于2025年5月19日。</span>
+</div>
+</div>
+<div class="en">
+<blockquote>
+This content has only been tested on Windows 11 24H2 LTSC 64-bit. The Windows environment should work fine, but I cannot guarantee compatibility with Linux, Mac, or other environments.<br />
+<strong>Actually, I think it should be possible, since Clash likely has other versions, right...? This method doesn’t rely on modifying the Hosts file or anything like that, but as for GenP, I really don’t know.</strong><br />
+This article was last updated on May 12, 2025, and as of today, this method is still effective. If it becomes ineffective, I will promptly update it here.
+</blockquote>
+<h2>A Few Things About Adobe Verification</h2>
+<p>This section explains how Adobe performs verification.</p>
+<p>First, Adobe pulls the primary verification method from its official website, attempting to access <code>ic.adobe.io</code> for the initial verification step.</p>
+<p>Then, in the second step, as of recent times (May 2025), Adobe added a user agreement address at <code>cc-api-data.adobe.io</code>. This triggers a user agreement pop-up when launching Adobe software, and regardless of whether you agree, it uses this to perform verification.</p>
+<p>Finally, the third step is that Adobe periodically generates a random domain for verification attempts, typically in the following formats:</p>
+<ul>
+    <li>Domains like 0mo5a70cqa.adobe.io, a <code>10-character random string.adobe.io</code> combination</li>
+    <li>Domains like 0bj2epfqn1.adobestats.io, a <code>10-character random string.adobestats.io</code> combination</li>
+    <li>Domains like qivgqug798p.7cnli.adobestats.io, an <code>8-12 character random string.5-character random string.adobestats.io</code> combination</li>
+</ul>
+<p>In addition, Adobe’s official Creative Cloud and the notorious Genuine Service also have genuine verification functions. However, they use the same verification channels as described above. If you don’t actively open these two applications for local validation, verification won’t be triggered. As for how to remove AGS (Adobe Genuine Service), I’ll cover that later.</p>
+<p>Recently, Adobe has become increasingly aggressive, generating a random verification address almost every day as their first task. While you can check a community-provided DNS list at <a href="https://a.dove.isdumb.one/list.txt">this website</a>, constantly battling Adobe is inconvenient. Plus, some users may need to modify their Hosts file for other purposes, such as accessing SteamCommunity. As of May 12, 2025, this website has recorded 2,191 verification URLs, which is a significant burden on your Hosts file. Moreover, most programs using DNS rules overwrite the Hosts file, making it highly inconvenient.</p>
+<p>So, I wrote this article to teach everyone how to defeat Adobe’s local verification. It’s not that I want to use pirated software—it’s just that Adobe’s subscription prices are outrageously expensive, and without a subscription, you can’t use their software at all. For those who don’t frequently use Adobe for design, it’s simply not worth it. I’d like to apologize to the great John Warnock in advance and hope you can soon convince God to smite this planet, which lacks the spirit of open source, with fire and brimstone.</p>
+<p>Please note that using cracked Adobe software means you cannot access Adobe’s official stock library or AI generation services. Blocking these verification addresses won’t affect your normal use of Adobe software, but since you don’t have a genuine licensed account, you won’t be able to access features like the stock library, AI generation, or collaborative platforms. I also encourage graphic designers or video editors with genuine needs to purchase a legitimate license. In profitable scenarios, the price of a genuine Adobe license through certain channels is actually reasonable and aligns with legal and ethical standards.</p>
+<h2>Required Software</h2>
+<p>First, we need an excellent traffic proxy software. I recommend and require using only Clash, with the project available <a href="https://github.com/clash-verge-rev/clash-verge-rev">here</a>. This is a community-maintained version of Clash called Clash-verge-rev. It essentially optimizes the Clash core and provides a user-friendly GUI, making it simple and powerful to use. Please, stop using outdated SSR-related software, and don’t come to me asking about certain VPNs.</p>
+<p>Second, we need an Adobe verification tool called Adobe GenP, with the project available <a href="https://github.com/wangzhenjjcn/AdobeGenp">here</a>. There are plenty of tutorials online about this tool, so this article won’t go into too much detail on how to use it. In the latest release on April 25, 2025, the author added a bounce-back patch provided by other contributors, which prevents Adobe from displaying the red pop-up warning, “Please stop using unauthorized software.” However, even with this patch, I recommend blocking Adobe’s online verification to prevent Adobe from invalidating the patch too quickly.</p>
+<h2>Specific Operation Steps</h2>
+<p>First, you need to use Adobe GenP to apply the crack patch and bounce-back patch to your Adobe software. For detailed instructions, refer to other people’s video tutorials. The bounce-back patch is located in the Pop-up Tools tab under the WinTrust section. We’ll discuss how this feature works in the principles section later. Also, if you’re installing Adobe components via Creative Cloud for the first time, don’t forget to uninstall AGS and disable any Adobe-related processes from auto-starting on boot.</p>
+<p>Next, open Clash, go to the “Subscriptions” tab, select the global extension script, right-click to edit the file, and replace its contents with the following code.</p>
+<blockquote>
+<code>
+function main(config, profileName) {<br />
+  if (!config || typeof config !== 'object') {<br />
+    config = {};<br />
+  }<br />
+<br />
+  if (!Array.isArray(config.rules)) {<br />
+    config.rules = [];<br />
+  }<br />
+<br />
+  config?.rules.unshift(<br />
+    "DOMAIN-SUFFIX,ic.adobe.io,REJECT-DROP",<br />
+    "DOMAIN-SUFFIX,cc-api-data.adobe.io,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{10}\\.adobe\\.io$,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{10}\\.adobestats\\.io$,REJECT-DROP",<br />
+    "DOMAIN-REGEX,^(?i)[a-z0-9]{8,12}\\.[a-z0-9]{5}\\.adobestats\\.io$,REJECT-DROP"<br />
+  );<br />
+<br />
+  return config;<br />
+}<br />
+</code>
+</blockquote>
+<p>After that, click save, close Clash, and restart it. This completes the blocking of Adobe’s genuine verification.</p>
+<p>As of Beijing time on May 12, 2025, this method is still effective. If it becomes ineffective in the future, please contact me, and I will update the code.</p>
+<h2>Principles for the Curious</h2>
+<p>Alright, if you’ve made it this far, it means you either don’t trust me or are curious about what this code does. First, this is not malicious code—it’s just a simple regex filtering statement that tells Clash which domains to block. Essentially, modifying DNS redirects Adobe’s verification addresses to a null IP (<code>0.0.0.0</code>), preventing access and thus blocking verification. Clash, as a traffic proxy tool, has the same functionality.</p>
+<p>Let’s break down what this code does. This is JavaScript code, a common backend scripting language.</p>
+<p>The first part is the function header, declaring a function called <code>main</code> that takes two parameters: the <code>config</code> configuration object and <code>profileName</code>.</p>
+<p>Based on feedback from some users, the author has added two logical statements here. The first, <code>!config</code>, checks whether the <code>config</code> parameter is <code>null</code>, <code>undefined</code>, or other falsy values. The <code>typeof config !== 'object'</code> statement verifies whether <code>config</code> is of the correct object type; if not, it resets it to an empty object (<code>{}</code>). The second logical statement, <code>Array.isArray(config.rules)</code>, checks whether <code>config.rules</code> is an array type (<code>Array</code>); if not, it assigns the correct value. In short, this code serves as defensive programming, strictly ensuring that errors or program crashes due to missing <code>config</code> or <code>config.rules</code> are avoided when users lack a subscription to a proxy provider.</p>
+<p>The next part is the implementation. The second line uses the optional chaining operator (<code>.?</code>) to safely access the <code>config.rules</code> array and inserts the following new rules at the beginning of the array using the <code>unshift()</code> method.</p>
+<p>Finally, it returns the <code>config</code> object and closes the function.</p>
+<p>The regex expressions need particular explanation.</p>
+<p>First, let’s explain the roles of <code>DOMAIN-SUFFIX</code> (domain suffix matching) and <code>DOMAIN-REGEX</code> (regular expression matching). The complete syntax is: <code>"match type,&lt;suffix or regex&gt;,&lt;action&gt;"</code>. The former matches all domains ending with the specified string, while the latter matches all domains that conform to the regex. We noticed that <code>ic.adobe.io</code> and <code>cc-api-data.adobe.io</code> are distinct domains with specific characteristics, so we used suffix matching to filter them. However, randomly generated gibberish domains require regex for filtering. There’s also a <code>DOMAIN</code> match type, but it strictly requires matching the exact address, which is cumbersome and restrictive, so we generally don’t use it.</p>
+<p>Next, let’s introduce the regex syntax. The <code>(?i)</code> flag makes the string case-insensitive. Although Adobe hasn’t gone so far as to use case sensitivity, I included this for future-proofing. <code>[a-z0-9]</code> indicates a random string containing lowercase letters a-z and digits 0-9, such as <code>a0b1c2d3e4f5g6</code>. <code>{8,12}</code> specifies that the string length is between 8 and 12 characters, while <code>{10}</code> precisely requires a length of 10 characters. The <code>\\.</code> matches the domain separator <code>.</code>. This needs clarification: in regex, a backslash escapes special characters, as some characters have specific meanings in assembly language and could cause confusion if used directly. Two backslashes escape the escape, as the backslash itself is a special character in assembly language. Finally, <code>^</code> and <code>$</code> denote exact start and end matching, meaning the regex between these symbols is complete and won’t filter higher-level domains.</p>
+<p>Many readers who have their own ideas and have reached this point may realize one thing: this code only filters three types of domains. Yes, that’s correct, because Adobe’s random generation is currently limited to these cases. Note that even these three domain types cover a total of <code>62<sup>10</sup>(2+62<sup>3</sup>+62<sup>4</sup>+62<sup>5</sup>+62<sup>6</sup>+62<sup>7</sup>)</code> combinations. Taking the logarithm, this is roughly on the order of 10<sup>33</sup>, or a quintillion-level number. By the time Adobe exhausts these random combinations, the universe will probably have undergone heat death, so there’s no need to worry about running out of domains.</p>
+<p>Of course, we can’t rule out Adobe going so far as to add new types, such as multi-level domains or special characters. Readers of this article can try writing new domain-filtering regex themselves or wait for my future updates.</p>
+<div class="handwritten">
+    <span>Last updated May 19, 2025.</span>
+</div>
+</div>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="编程" /><summary type="html"><![CDATA[利用GenP和Clash正则来解决Adobe系列自带认证与弹窗问题。]]></summary></entry><entry><title type="html">【前端开发】如何制作CHM文件</title><link href="https://kuzubukurozard.github.io//2025/05/04/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91-%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9CCHM%E6%96%87%E4%BB%B6/" rel="alternate" type="text/html" title="【前端开发】如何制作CHM文件" /><published>2025-05-04T20:57:00+00:00</published><updated>2025-05-04T20:57:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/05/04/%E3%80%90%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91%E3%80%91%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9CCHM%E6%96%87%E4%BB%B6</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/05/04/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91-%E5%A6%82%E4%BD%95%E5%88%B6%E4%BD%9CCHM%E6%96%87%E4%BB%B6/"><![CDATA[<h2>关于CHM文件</h2>
+<p>CHM全称为Microsoft Compiled HTML Help，即微软HTML帮助集，是早期微软提供的一种用户手册，其本质是基于HTML4.01和CSS2的一个编译后的电子书文件，具有较好的可读性。但目前已经在很久以前就被微软停止更新，因此版本并没有更新到更现代化的HTML5和CSS3上，而且不支持UTF-8等现代化解码方式。</p>
+<p>本来的用途是提供给用户的一个编辑文档，但由于本身编译起来较为麻烦，可视化程度不高而且需要一定的代码基础，所以渐渐遭到了放弃。虽然民间后续提供了很多新的更新，但这种格式已经逐渐淡出了大众视野，只有一些在玩TRPG的老人和极少数工作者会采用这样的格式了。</p>
+<p>本文主要是介绍如何制作一本CHM文件，旨在帮助Ventangle爱好者以及其他TRPG爱好者制作CHM，从根本上了解CHM的编写方式，提供更好、更高的自由度。</p>
+<p>建议结合我在Bilibili<a href="https://www.bilibili.com/video/BV17hVBzXELb/">发布的视频</a>观看。本文是对于视频的总结与补充，如果有不直观的地方，请查看视频当中对应的部分。</p>
+
+<h2>准备工作</h2>
+<p>如果你对WEB开发语言一窍不通，那不妨使用EasyCHM和WinCHM Pro等民间开发工具来辅助开发。本文使用的是VS Code+微软官方的HTML Helper Workshop开发工具来进行开发，更贴近原生态的开发环境，可以最大程度上避免遇到兼容性问题。此外，笔者也不对各位使用其他第三方开发工具开发CHM过程中遇到的任何困难全权负责，请自行参考你选用的工具的开发指南和纠错提示。</p>
+<h3>基础环境</h3>
+<p>任何环境其实都可以进行CHM的编译，笔者使用的是Windows平台，同时也不需要配置任何复杂的内容。</p>
+<p>唯一需要配置的，是需要下载Git或GitDesktop来进行推送或拉取，VS Code中有配套的可视化界面，因此使用VS Code进行整个工作流程也是可以的。不熟悉控制台语言的朋友可以使用GitDesktop或VS Code这样的可视化GUI来完成更新的工作，或是提交给我来由我完成推送。</p>
+<h3>VS Code的配置</h3>
+<p>首先使用搜索引擎直接搜索VS Code即可找到<a href="https://code.visualstudio.com/">官网</a>并进行下载，安装方式非常简单。</p>
+<p>接下来需要安装一些必要的便利插件。包括：</p>
+<ul>
+    <li><strong>Chinese (Simplified) (简体中文) Language Pack for Visual Studio Code</strong>，官方提供的中文语言包。 </li>
+    <li><strong>Live Server</strong>，一个WEB开发可视化的插件。</li>
+    <li><strong>Auto Close Tag</strong>，自动闭合HTML标签。</li>
+    <li><strong>Auto Rename Tag</strong>，自动更改HTML标签的前后文。</li>
+</ul>
+<p>这些插件均为默认配置即可，不需要进行任何更改。</p>
+<h3>关于HTML Helper Workshop</h3>
+<p>这是微软官方CHM编辑器，汉化版的链接<a href="https://www.onlinedown.net/soft/33431.htm">在此</a>。请注意，由于这个软件较为古老，所以可能在现代系统(Windows11和Windows10等)上的渲染与兼容性存在问题，可能会导致崩溃，以及我没有测试在Linux或其他操作系统上的兼容性。</p>
+<p>汉化文件可能会遭到各种杀毒软件的报毒，这是正常现象，因为汉化为注入式汉化，会被判定为恶意代码。请自行添加信任或放行，避免被杀毒软件错误查杀。</p>
+<h3>关于GitHub</h3>
+<p>想要提交GitHub，有三种方式可供选择：分别是脚本语言Git，GitHub官方提供的GUI客户端GitHubDesktop，以及VS Code自己集成的GitHu功能。</p>
+<p>对于并不了解GitHub和控制台语言的人，我推荐使用GitHubDesktop来进行提交，或者使用VS Code集成的功能。它们具有更好的可视化界面和可读性，可以避免对控制台语言的不熟悉而导致的错误。</p>
+<p>具体该如何安装Git或GitHubDesktop，网络上有很多教程，请自行搜索解决，本文将会在后文提供如何使用VS Code进行提交的教程。</p>
+<p>当然，也需要你注册一个GitHub账号来提交更改。</p>
+
+<h2>基本概述</h2>
+<p>CHM是基于HTML4.01和CSS2的HTM文件集，这是一个较为古老的规范，与现代流行的HTML5和CSS3存在一些差异，有一些更简单、性能更好的语法无法使用。因此在开发时，请尽量避免使用太过复杂的CSS样式以及Json脚本文件，CHM阅读器可能很难正常读取。</p>
+<p>此外，由于在CHM的年代，现代化的UTF编码尚未流行，所以对于汉语用户而言，它仅支持GBK格式的编码。作为页面的.htm文件可以在头部声明UTF-8编码来进行转译，并且在UTF-8 with BOM的环境下正常打开，但.hhc和.hhp这样的项目文件是完全不支持除GBK外的编码的。因此，在开发过程中，请完全避免使用VS Code对这些文件进行直接编译，因为可能会导致严重的、不可逆转的错误出现。</p>
+<p>我之所以没有使用EasyCHM或WinCHM Pro等第三方工具开发， 是因为它们生成的文件并非.hhp，而是.wcp等自己的格式。虽然参数项目与.hhp完全相同，但存在潜在的兼容性问题，正如前文所述，若使用第三方软件开发时遇到问题，笔者不承担任何责任。</p>
+<p>同样，仍然存在一个问题是，HTML4的声明文件存在两种情况：即<code>"-//IETF//DTD HTML//EN"</code>与<code>"-//W3C//DTD HTML 4.01//EN"(或类似)</code>这两者。</p>
+<p>前者是HTML4的早期测试版本，后者是由设计师网站提供的正式版HTML4.01。二者之间的区别是后者的语法更加严格和规范，在浏览器上的适配性更好；但由于我们制作的是CHM文件，因此使用前者这一由官方推荐使用的版本兼容性会更好。</p>
+<p><br /></p>
+<p>对于实在没有WEB开发基础、甚至不懂代码语言的用户而言，我推荐你直接从我的GitHub项目上clone一份代码，然后按照接下来提供的指示来进行内容更改。若遇到无法解决的问题，请随时通过邮箱或QQ来联系我，或是在Issues当中提出问题。</p>
+
+<h2>基本教程</h2>
+<h3>从Github上拉取项目文件并在VS Code中打开</h3>
+<p>在任意一处目录下建立空白文件夹，并在地址栏内输出<code>cmd</code>以进入控制台页面。然后输入<code>git clone https://github.com/KuzuBukuroZard/VentangleCHM</code>来将项目下载到本地。</p>
+<p>接下来，在VS Code当中，选择文件 -&gt; 打开文件夹，并选择你刚才clone的本地文件夹，就可以在左侧看到整个项目文件了，接下来就可以正常进行编写了。</p>
+<h3>基础的HTML与CSS语法</h3>
+<p>首先是样式表文件。我已经为各位准备好了一个基础的样式表，你需要做的是在头部处进行声明，即<code>&lt;link rel="stylesheet" type="text/css" href="styles.css"&gt;</code>，这样才能让样式正确的被应用。</p>
+<p>接下来是基础语法。在HTML当中，不同的样式应用需要用标签来包裹，基础语法为<code>&lt;标签&gt;(内容)&lt;/标签&gt;</code>。虽然在前文已经安装了Auto Close Tag来避免出现错误，但我仍然推荐你养成好习惯，先将标签闭合，再输入内容文字。这样可以最大化的避免标签未闭合而导致的页面效果混乱。</p>
+<p>对应到Word或Markdown文档里的标题，你所要的标签是<code>&lt;h1&gt;~&lt;h6&gt;</code>，这是一到六号标题的样式标签。</p>
+<p><code>&lt;p&gt;</code>是正文段落，即整个内容的正文。你所有的正文都需要用这个标签来进行包裹，会自动应用字符样式、段间距等格式，并且进行自动换行。<code>&lt;br&gt;</code>同样可以进行换行，但我不推荐你使用这个标签，因为它不包含样式，一般只用作空行来使用。</p>
+
+<h3>更复杂的组件</h3>
+<p>更复杂的组件包括无序列表<code>&lt;ul&gt;与&lt;li&gt;</code>和表格<code>&lt;table&gt;</code>。</p>
+<h4>列表 - &lt;ul&gt;</h4>
+<p>基础使用方式如下：</p>
+<blockquote>
+    <code>
+　　&lt;ul&gt;<br />
+　　　　&lt;li&gt;列表一&lt;/li&gt;<br />
+　　　　&lt;li&gt;列表二<br />
+　　　　　　&lt;ul&gt;<br />
+　　　　　　　　&lt;li&gt;二级列表1&lt;/li&gt;<br />
+　　　　　　　　&lt;li&gt;二级列表2&lt;/li&gt;<br />
+　　　　　　&lt;/ul&gt;<br />
+　　　　&lt;/li&gt;<br />
+　　&lt;/ul&gt;<br />
+    </code>
+</blockquote>
+<p>它看起来是这样的：</p>
+<ul>
+    <li>列表一</li>
+    <li>列表二
+        <ul>
+            <li>二级列表1</li>
+            <li>二级列表2</li>
+        </ul>
+    </li>
+</ul>
+<p>&lt;ul&gt;为提示HTML导入无序列表的样式，而&lt;li&gt;就是列表的具体名头。&lt;ul&gt;之间可以连续嵌套，形成多级样式。</p>
+<p>如果你需要使用有序列表，那请将&lt;ul&gt;改成&lt;ol&gt;即可。</p>
+<h4>表格 - &lt;table&gt;</h4>
+<p>基础使用方式如下：</p>
+<blockquote>
+    <code>
+　　　　&lt;table&gt;<br />
+　　　　　&lt;tr&gt;<br />
+　　　　　　&lt;th&gt;表格名头1&lt;/th&gt;<br />
+　　　　　　&lt;th&gt;表格名头2&lt;/th&gt;<br />
+　　　　　　&lt;th&gt;表格名头3&lt;/th&gt;<br />
+　　　　　&lt;/tr&gt;<br />
+　　　　　&lt;tr class="odd"&gt;<br />
+　　　　　　&lt;td rowspan="2"&gt;单元格合并奇&lt;/td&gt;<br />
+　　　　　　&lt;td&gt;奇数内容1&lt;/td&gt;<br />
+　　　　　　&lt;td&gt;奇数内容2&lt;/td&gt;<br />
+　　　　　&lt;/tr&gt;<br />
+　　　　　&lt;tr class="even"&gt;<br />
+　　　　　　&lt;td&gt;偶数内容1&lt;/td&gt;<br />
+　　　　　　&lt;td&gt;偶数内容2&lt;/td&gt;<br />
+　　　　　　&lt;/tr&gt;<br />
+　　　　　&lt;tr class="odd"&gt;<br />
+　　　　　　　&lt;td rowspan="2"&gt;单元格合并偶&lt;/td&gt;<br />
+　　　　　　　&lt;td&gt;奇数内容3&lt;/td&gt;<br />
+　　　　　　　&lt;td&gt;奇数内容4&lt;/td&gt;<br />
+　　　　　&lt;/tr&gt;<br />
+　　　　　&lt;tr class="even"&gt;<br />
+　　　　　　　&lt;td&gt;偶数内容3&lt;/td&gt;<br />
+　　　　　　　&lt;td&gt;偶数内容4&lt;/td&gt;<br />
+　　　　　　　&lt;/tr&gt;<br />
+　　　　　&lt;table&gt;<br />
+    </code>
+</blockquote>
+<p>它看起来是这样的：</p>
+<table>
+    <tr>
+        <th>表格名头1</th>
+        <th>表格名头2</th>
+        <th>表格名头3</th>
+    </tr>
+    <tr>
+        <td rowspan="2">单元格合并奇</td>
+        <td>奇数内容1</td>
+        <td>奇数内容2</td>
+    </tr>
+    <tr>
+        <td>偶数内容1</td>
+        <td>偶数内容2</td>
+    </tr>
+    <tr>
+        <td rowspan="2">单元格合并偶</td>
+        <td>奇数内容3</td>
+        <td>奇数内容4</td>
+    </tr>
+    <tr>
+        <td>偶数内容3</td>
+        <td>偶数内容4</td>
+    </tr>
+</table>
+<p>但请注意，HTML4当中没有nth-child这一参数，因此我在实现类似于这个样式的表格时，我设计了不同的class类"even"与"odd"，以手动区分奇数行与偶数行。这是无奈之举，虽然你可以在HTML5中也这样做，但效率会更低。</p>
+
+<h3>我独立开发的组件</h3>
+<p>在规则书当中，我也做了一个简单的怪物卡组件，以配合原版的风格。</p>
+<p>它看起来是这样的：</p>
+<div class="mobcard-container">
+    <div class="mobcard">
+        <div class="mobcard-title">怪物名称</div>
+        <div class="mobcard-style"></div>
+        <div class="mobcard-species">种</div>
+    
+        <div class="mobcard-content">
+            <div class="mobcard-stat"><strong>等级：</strong>0</div>
+            <div class="mobcard-stat"><strong>矜持：</strong>4</div>
+    
+            <div class="mobcard-weapon">
+                <div><strong>武器</strong></div>
+                <div>小刀(零/「昏迷」2)</div>
+                <div>手枪(零~短/「昏迷」2/战斗噪音)</div>
+            </div>
+    
+            <div class="mobcard-description">
+                描述描述描述。这只伶俐的棕色狐狸跳过一只懒惰的狗。这只伶俐的棕色狐狸跳过一只懒惰的狗。这只伶俐的棕色狐狸跳过一只懒惰的狗。
+            </div>
+        </div>
+    </div>
+    
+    <div class="mobcard">
+        <div class="mobcard-title">怪物名称</div>
+        <div class="mobcard-style"></div>
+        <div class="mobcard-species-mob">种<br />集群</div>
+    
+        <div class="mobcard-content">
+            <div class="mobcard-stat"><strong>等级：</strong>0</div>
+            <div class="mobcard-stat"><strong>矜持：</strong>4</div>
+    
+            <div class="mobcard-weapon">
+                <div><strong>武器</strong></div>
+                <div>小刀(零/「昏迷」2)</div>
+                <div><strong>能力</strong></div>
+                <div>《能力名称》(类型)描述</div>
+            </div>
+    
+            <div class="mobcard-description">
+                描述描述描述。这只伶俐的棕色狐狸跳过一只懒惰的狗。这只伶俐的棕色狐狸跳过一只懒惰的狗。这只伶俐的棕色狐狸跳过一只懒惰的狗。
+            </div>
+        </div>
+    </div>
+</div>
+
+<p>我们来逐步拆解这个控件的内容。基础语法是使用&lt;div class="类名"&gt;进行包裹各种控件的。</p>
+<p>首先是容器mobcard-container。这是方便根据页面的宽度来并排显示多个怪物卡片的。</p>
+<p>接下来是怪物卡的整体样式mobcard。这是规定了怪物卡的大小、边框、底色等具体的内容，表达了容器的形状。</p>
+<p>然后是具体的样式mobcard-title、mobcard-style、mobcard-species(-mob)。Title的作用就是怪物的名称，style是右上角的黑色三角形。由于HTML4代码存在限制，这一样式的实现相当奇怪，并且在不同的浏览器上有不同的效果，但经过测试，在CHM阅读器当中是不存在问题的。最后的species是怪物的种族，我们注意到规则书当中，是否为集群时右上角的字体大小不同，因此我使用了-mob的分支来进行区分。</p>
+<p>接下来是mobcard-content。这是怪物的具体数值信息，包括了mobcard-stat，即怪物的等级与矜持，以及mobcard-weapon，怪物的能力和武器。由于能力和武器的格式相同，因此我没有单独区分两者的格式，所以请各位自行添加。</p>
+<p>最后是mobcard-description。这是怪物的描述部分，具体较为简单，不做过多叙述。</p>
+<p>代码看起来稍微有些臃肿，但这是在HTML4情况下，且不依赖响应式设计下的最大兼容方案，请严格按照我在Github项目中提供的模板进行编写。</p>
+
+<h2>结语</h2>
+<p>目前想到的内容只有这些。如果有后续想法，我会再次更新这篇文章。遇到问题时请及时联系我，或者咨询AI，或者直接参考<a href="https://developer.mozilla.org/zh-CN/docs/Web/HTML">设计师网站</a>上的介绍。</p>
+
+<div class="handwritten">
+    <span>最后更新于2025年5月5日。</span>
+</div>
+
+<style>
+    .mobcard {
+    width: 400px;
+    border: 2px solid #000000;
+    position: relative;
+    background-color: #ffffff;
+    font-family: "微软雅黑", "Microsoft YaHei", sans-serif;
+    margin: 15px 15px 15px 0;
+    float: left;
+}
+
+.mobcard-title {
+    padding: 8px 15px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.mobcard-content {
+    padding: 10px 15px;
+    line-height: 1.5;
+}
+
+.mobcard-shabi {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 70px;
+    height: 70px;
+    overflow: hidden;
+}
+
+.mobcard-style {
+    position: absolute;
+    top: 0;
+    right: -1px;
+    width: -1px;
+    height: 0;
+    border-style: solid;
+    border-width: 0 50px 50px 0;
+    border-color: transparent #000 transparent transparent;
+}
+
+.mobcard-species {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: bold;
+  }
+
+.mobcard-species-mob {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 40px;
+    text-align: center;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.1;
+}
+
+.mobcard-stat {
+    margin: 5px 0;
+}
+
+.mobcard-weapon {
+    margin-top: 8px;
+}
+
+.mobcard-description {
+    margin-top: 15px;
+}
+
+.mobcard-container::after {
+    padding: 10px;
+    content: "";
+    display: block;
+    clear: both;
+}
+</style>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="编程" /><summary type="html"><![CDATA[以Ventangle作为基础，介绍基本的CHM编译方式与注意事项。]]></summary></entry><entry><title type="html">【写作素材】我的作品里出现的人名考据</title><link href="https://kuzubukurozard.github.io//2025/04/29/%E5%86%99%E4%BD%9C%E7%B4%A0%E6%9D%90-%E6%88%91%E7%9A%84%E4%BD%9C%E5%93%81%E9%87%8C%E5%87%BA%E7%8E%B0%E7%9A%84%E4%BA%BA%E5%90%8D%E8%80%83%E6%8D%AE/" rel="alternate" type="text/html" title="【写作素材】我的作品里出现的人名考据" /><published>2025-04-29T16:53:00+00:00</published><updated>2025-04-29T16:53:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/29/%E3%80%90%E5%86%99%E4%BD%9C%E7%B4%A0%E6%9D%90%E3%80%91%E6%88%91%E7%9A%84%E4%BD%9C%E5%93%81%E9%87%8C%E5%87%BA%E7%8E%B0%E7%9A%84%E4%BA%BA%E5%90%8D%E8%80%83%E6%8D%AE</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/29/%E5%86%99%E4%BD%9C%E7%B4%A0%E6%9D%90-%E6%88%91%E7%9A%84%E4%BD%9C%E5%93%81%E9%87%8C%E5%87%BA%E7%8E%B0%E7%9A%84%E4%BA%BA%E5%90%8D%E8%80%83%E6%8D%AE/"><![CDATA[<h3>爱尔希妲(Elpida)</h3>
+<p>爱尔希妲 - Elpida，来自于希腊语ἐλπίς(elpis)，意为希望。</p>
+<p>角色冲突为滑坡谬误与自卑。希望这一意象取决于她成为死灵法师之前曾经是个虔信徒(牧师)，主要剧情与神秘学和哲学有关，所以采用了希腊语这一语言作为基底。</p>
+
+<h3>萨吕特(Sallute)</h3>
+<p>萨吕特 - Sallute，来源于英语Salute，意为敬礼(军礼)。</p>
+<p>角色冲突为自我意识的觉醒。敬礼这一意象取决于她作为军队指挥官，以及曾经对军队忠心耿耿的态度。</p>
+
+<h3>莱昂瑞尔(Liorael)</h3>
+<p>莱昂瑞尔 - Liorael，来源于希伯来语的Lior(我的光)与英语的angle(天使)，同时带有Lier的混淆含义。</p>
+<p>角色冲突为自我主义和谄媚。本身名字是偏神圣的教名，采用了更具宗教色彩的希伯来语与英文意象，也用相似且拗口的发音包含了她真正信仰神明的虚伪内核。</p>
+
+<h3>艾菲姆(Ephem)</h3>
+<p>艾菲姆- Ephem，来源于英语ephemeral(短暂易逝的)与Epiphyllum(昙花)。</p>
+<p>角色冲突为自我实现的渴望。由于角色罹患重病即将死亡，所以选择了这个名字作为在妓院的花名。</p>
+
+<h3>奥罗拉(Aurora)</h3>
+<p>奥罗拉 - Aurora，来源于英语aurora(极光)。</p>
+<p>角色冲突为自我献身精神。名字的另外一个来源可以是极光的本意，即罗马神话中曙光女神的名字。故事整体基调是绝望而痛苦的，但奥罗拉一直在坚持维持User的生命。</p>
+
+<h3>瓦莉希尔(Varythiel)</h3>
+<p>瓦莉希尔 - Varythiel，来源于古英语wǣr(真理)与希伯来语El(神)。</p>
+<p>角色冲突为自我献身和孤独者。Vary同样可以是varðr，北欧神话中的监护者，作为对她作为魔族之王保护魔族的意象。</p>
+
+<h3>間宵トカゲ(Mayoi Tokage)</h3>
+<p>间宵户影 - 間宵トカゲ，来源于迷い(迷惘)和トカゲ(蜥蜴)的转写。</p>
+<p>没什么明确的角色冲突，本质是一个图一乐的内容。中文汉字的写法来源于角色设计，即迷惘的蜥蜴人，又采取了“躲在暗处”这个象征。</p>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="写作" /><summary type="html"><![CDATA[关于我写的角色卡和小说里的各种人名的来源，也相当于给我自己一个备忘录。]]></summary></entry><entry><title type="html">【龙与地下城杂谈】伪海德拉(False Hydra)</title><link href="https://kuzubukurozard.github.io//2025/04/26/%E9%BE%99%E4%B8%8E%E5%9C%B0%E4%B8%8B%E5%9F%8E%E6%9D%82%E8%B0%88-%E4%BC%AA%E6%B5%B7%E5%BE%B7%E6%8B%89(False-Hydra)/" rel="alternate" type="text/html" title="【龙与地下城杂谈】伪海德拉(False Hydra)" /><published>2025-04-26T17:25:00+00:00</published><updated>2025-04-26T17:25:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/26/%E3%80%90%E9%BE%99%E4%B8%8E%E5%9C%B0%E4%B8%8B%E5%9F%8E%E6%9D%82%E8%B0%88%E3%80%91%E4%BC%AA%E6%B5%B7%E5%BE%B7%E6%8B%89(False-Hydra)</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/26/%E9%BE%99%E4%B8%8E%E5%9C%B0%E4%B8%8B%E5%9F%8E%E6%9D%82%E8%B0%88-%E4%BC%AA%E6%B5%B7%E5%BE%B7%E6%8B%89(False-Hydra)/"><![CDATA[<div class="zh">
+<blockquote>
+写在前面：这是Arnold Kemp于2014年9月4日发布在Goblin Punch论坛上的一篇<a href="https://goblinpunch.blogspot.com/2014/09/false-hydra.html">文章</a>。内容包括杀害、洗脑、精神崩溃等包含轻微猎奇与恐怖的要素，以及一些图片。请各位读者在阅读前酌情考虑自身情况，若感到不适，请及时回避。本文本质上是一篇DND或某些传统西式奇幻世界观下的创意文章，部分术语和题材将参考国内《龙与地下城》的社群称呼进行翻译，在此感谢各位翻译前辈与爱好者的辛勤耕耘与付出。另外，原文的图片因为我觉得不适合在国内平台展示，因此<span class="term" data-description="当然，也是我比较懒惰……">没有保留</span>，敬请谅解。
+<br />
+译者的话：我没怎么在国内的网站上检索到关于False Hydra的信息，但是这个其实在外网DND和Creepy相关的圈子还是相当热门的。如果有人对False Hydra在国内社群的信息有更多了解，请及时联系我，我会进行修正并协助推广，非常感谢！
+</blockquote>
+<h2>伪海德拉</h2>
+<p>普世认知之中，伪海德拉自大地之下而生。这些宛若未分化的扭曲血肉一般的生物无端出现，如无根之薯一般破土而出。相传，它们是<em>谎言</em>散播的孽种，每一句虚妄之言，都会催使伪海德拉愈发膨胀壮大。</p>
+<p>学者们对此深信不疑——只因他们提不出更高明的见解。事实上，这种可憎造物的存在本身就令人匪夷所思，学界甚至根本无从着手研究。</p>
+<p>每当谈及此物，偏执便会笼罩心头。所有人都会反复追问：它来到这里了吗？它在我的城市里吗？此时此刻，那张狭长、松弛的面容是否正在透过窗棂注视着我？</p>
+<br />
+<p>时常会有虚惊一场的案例。罪犯与逃兵们时常以受到伪海德拉的蛊惑作为托词，或是说自己在竭力逃离它的掌控。不过偶尔，这恰是真相。</p>
+<p>苍凉破败的鬼城遍布在<span class="term" data-description="the Gray Waste: 在国内DnD2024(或称5r)中被翻译为死灰荒地。全称为The Gray Waste of Hades，简称为哈迪斯或死灰荒地，是位于巨轮宇宙负位面中央(混沌中立)的邪恶位面，是尤格罗斯魔Yugoloth的家园。这一位面被描述为：缺乏感情、希望与宁静的境界，所有的一切都是一片灰茫茫的颜色，任何踏入其中的物品都会讯速褪色，生命也会逐渐丧失感情，最终永久地退化为幼虫Larva。">死灰荒地</span>之上——这些是伪海德拉曾经狩猎过的牧场。无人敢重新踏足这些遗址，唯恐惊扰弥留的怨灵。或许那些苍白骨殖之中，仍有黢黑坏疽蔓延滋生——伪海德拉，犹然在此。可你肉体凡胎，又能如何分辨？</p>
+<p>而在较为安逸的国度里，亦能找到怀疑者。这些饱学之士会轻抚下颌，从容地告诉你伪海德拉纯属虚构，这只不过是错觉，是某种荒谬的集体幻觉，或是蛰伏的恶魔在作祟。</p>
+<p>然而，他们大错特错。</p>
+<h2>本文使用指南</h2>
+<p>随你怎么用。但若由我设计，我会将其作为PC们漫游式跑团中的挑战。这一设定非常适用于单元剧式的跑团之中——当玩家漫游到一座新城镇，全新的威胁便悄然浮现。</p>
+<p>或许有人可以制作一份“这座城镇发生了什么？”的随机遭遇表，如下：</p>
+<ul>
+<li>1 - 居民皆为<span class="term" data-description="the Worm God: 这个称呼来源比较多，但译者个人推断为凯沃斯，蠕虫行者(Kyuss the Worm That Walks)。据传，凯沃斯是曾经侍奉恶魔王子奥库斯Orcus的高阶祭司，因为其亵渎行径而遭到放逐，却意外发现了以献祭登神的途径，最后执行了邪恶仪式成为了一个似人非人、似神非神的不死存在。时至今日，仍有许多信徒在追随其途径。">蠕虫行者</span>的信徒，表面友善实则邪恶。</li>
+<li>2 - <span class="term" data-description="Tremors: 异形魔怪(或称震颤、深渊异形等)是一系列的喜剧恐怖电影，内容为一伙游客对抗镇子上的怪物。相当Cult的片子，其形式几乎和伪海德拉的设计相同。">异形魔怪</span>式的剧情。</li>
+<li>3 - 伪海德拉作祟。</li>
+<li>4 - 其他惊悚设定……</li>
+</ul>
+
+<h2>渗透</h2>
+<p>伪海德拉入侵一座城镇的方式其实十分质朴。它于土壤中啃食虫豸，饱食之后逐渐向上生长，逼近地面。这一过程将持续数日（也许数周，或者数年），直至撕裂地表，破土而出。它可能会在某个地窖悄然钻出，躲藏在一排封存果酱的瓶罐后方；又或者，在碎裂的铺路石下方，它会悄然探出面庞。随后，它将开始歌唱。</p>
+<p>当它歌唱时，<span class="term" data-description="非注意盲视: 人类由于主要任务占据了太多认知资源，导致对背景认知察觉减轻的一种认知心理学现象。">存在感便会被抹除</span>。它能够在人类的注意力之中创造空白的裂隙，并且使自身悄然穿梭其中。比隐形更加微妙，也更加可靠。</p>
+<p>在这个阶段，伪海德拉仍旧仅是一具深埋地底的躯干，与成年人类体型相仿。颈部不断攀升，直至头颅钻出地面。此时，它的头颅仅有成人脑袋大小，外形也与人类相似。但通体惨白、无毛，眉骨与嘴唇畸形肿胀，眼眶之中仅有一片咸湿的黑暗。</p>
+<p>但当然，没人会注意到这一切。只要它的歌声尚未停歇，伪海德拉便会永远处于我们的盲点之中。</p>
+
+<h2>生长</h2>
+<p>伪海德拉吞噬人类，这一点毋庸置疑。但为了吃下一个人，它通常必须停止歌唱，这就意味着将会使自身陷入被人察觉的风险之中。因此，为了使这一流程更容易完成，伪海德拉通常会将不幸的受害者拖行一段距离来带入地下，比如地窖、下水道，或者是它自行挖掘的地下巢穴，然后再安心地进行吞噬。</p>
+<p>设想这般情景：一个人在冷清的街道上独行着。突然，周围的寂静比方才更为深沉压抑，就仿佛某种背景噪音刚刚戛然而止。一阵刺耳的刮擦声响起，那是下水道的栅格在粗粝石面上滑动的声响。深不见底的黑暗之中，一张血肉模糊的扭曲面庞，正赤裸裸地渴望着进食。那粗壮的脖颈开始伸展，如同剑鞘中滑出的寒芒，撕裂粘稠的黑暗——一英尺……三英尺、六英尺——仍不见尾！利齿咬住行人臂膀，将其拖入井口。人类的躯体不足以穿过此等细窄缝隙，可是伪海德拉不会放弃，它拖拽、拧转，直至血肉再度塑型。最终吞咽咀嚼之声终于停止，诡谲歌声随之再度响起。</p>
+<p>受害者也许有家有室，自有亲人牵挂安危。但海德拉之歌将会抚平他们的大脑，将记忆之中的褶皱与缝隙一一填补、消解，彻底抹除。被吞噬者将会永远地与伪海德拉融为一体，未曾消失，亦未曾存在。而那歌声，将继续编制名为遗忘的苦闷囚牢。</p>
+<p>如是乎，伪海德拉得以成长。它的脖颈越伸越长……歌声，也越传越远。</p>
+
+<h2>失调</h2>
+<p>伪海德拉的歌声不仅能隐藏自身的存在，更能抹去关于被它吞噬之人的记忆，但这并非一个完美无瑕的机制。</p>
+<p>受害者们的妻子会疑惑，为何衣柜中会有男人的衣物；居民们会察觉，过去几夜的街灯未曾点亮；教堂会突然发现，钟声再也无人敲响。</p>
+<p>多数情况下，这些漏洞会自我修复。当妻子移开视线，她便会忘却衣物的存在；或者，她会“理所当然地”回忆起这是兄弟上次来访时遗落的衣物；又或者，她虽然意识到了其中的违和感，但潜意识却迫使她在某个无月之夜悄悄将衣物丢弃。她会患上<span class="term" data-description="虚谈症: 心理学上人类对于自身或世界产生一种虚构、扭曲或误解性的记忆错误。其现象可以是细微的记忆扭曲，也可以是荒诞的虚构创造。">虚谈症</span>，强迫自己为记忆打上补丁，一次又一次地尝试自圆其说。</p>
+<p>但意识深处还是会认知到这种异常。这一部分意识会被压制、被封锁、被否定，但神经还是会在大脑皮层下方劈啪作响。如同一位身缠梅毒的疯子，尽管被家人锁在阁楼，在楼下宴饮光筹交错之中的某个冷清瞬间，依旧能察觉到那疯狂的喃喃呓语。</p>
+<p>这份压力会不断积累。初期症状类似于偏执妄想，类似被窥视感的偏执尤为严重（因为伪海德拉<em>的确</em>正在注视着你，将那苍白的面庞贴在窗上，于玻璃上呵出一片雾痕）。随后，症状还会加剧。追忆往事的行为会引发强烈的焦虑和痛苦，因此人们会主动逃避记忆。记忆也随之变得扭曲：捏造的谎言越来越多，身份的认知愈发混乱，就连朋友的面容也逐渐模糊。<p>
+<p>人类的大脑无法承受这种负荷。各种精神异常开始如同雨后菌菇般野蛮生长，神经紊乱、思觉失调，接踵而至。</p>
+<br />
+<p>极端案例之中，会出现<span class="term" data-description="裂脑症: 连接左右脑的胼胝体受损后，会抑制左右脑之间的信息传递。这可能会导致患者的行为自相矛盾，甚至自我伤害。">裂脑症</span>——大脑的一部分正在试图向另一部分发出警告。PC会罹患<span class="term" data-description="异手症: 裂脑症的一种衍生症状。患者的手会失去控制，甚至能够做出独立且复杂的行为。">异手症</span>，某条肢体会像拥有自我意识一般，拼命而笨拙地向PC本人传递危机。</p>
+<p>PC也许会在某天清晨醒来时，发现自己的胸口被人用指甲刻下了<strong>“它在看着你。窗户。”</strong>，而其左手指甲缝里，还嵌着自己的皮肉：妙极了。也许会收到一封来自PC母亲的惊慌失措的信，质问为何上一封家书里夹杂着<strong>“它吃了他在我面前吃了他但我没看到它吃了他”</strong>这句突兀的话：更棒了。甚至如果PC觉得自己的手被恶魔附身并毅然决然地决定自断其肢——那可真是美味至极。</p>
+<p>这也可以成为引入PC们的剧本楔子：某位老熟人寄来一封看似稀松寻常的信件，内文却赫然夹杂着<strong>“救我诸神在上求你救救我救命”</strong>这样的句子。然而当PC赶到现场，寄信人矢口否认有写过如此信件的记忆，坚称这可能只不过是某个巫师的恶作剧，却不知为何神色惊慌，甚至有些神经质。</p>
+<br />
+<p><strong>“……那你的妻子呢？”</strong></p>
+<p><strong>“妻子？我从未结婚。阁下为出戏言？”</strong></p>
+<br />
+<p>然后次日，告诉PL，他们的PC也忘记了那位妻子的存在。当然，你无法真的抹除PL本人脑中的超游认知，但只要这有利于其在角色扮演之中表现出那种偏执和焦虑的状态，就可以允许他们合理地运用。</p>
+<p>他们的梦境之中，萦绕着低沉的哀歌，歌者皆无面孔。在黑暗的某处，悄然探出惨白的面容，却唯有那咸湿的黑暗在舔舐残渣。</p>
+
+<h2>剧增</h2>
+<p>随着伪海德拉的成熟，它的头颅会不断增生，且过程呈指数级加速。卵石街道上的血迹越来越多，脑海之中那些认知失调也如同坏疽一般扩散腐烂。</p>
+<p>伪海德拉将会愈发肆无忌惮。每场盛宴都使其力量倍增，足以碾压人类文明。谨慎已然是多余的累赘。</p>
+<p>修长脖颈高耸过楼，兽相恶首无风摇曳；畸形颅骨膨大扭曲，狰狞下颌锐若拳匕。很快，整座城市都将成为它的腹中之物。</p>
+<p>但亲爱的，我的挚爱啊，你可知：哪怕倾尽这世间所有鲜血，也无法浇熄那无尽饥渴。</p>
+
+<h2>袭击</h2>
+<p>PL们或许会怀疑这是否是某种隐形术，但常规的对抗隐形效应的法术对策在此是完全无效的。这种歌声更近似于魅惑效应或暗示术，因此，对抗魅惑的法术或许会部分或暂时地抵消这一效应，不过也仅够挤出几句破碎的只言片语罢了：“它在看着我们！快看！”之类的。</p>
+<p>那么问题来了，我们该如何让玩家通过良好的游戏策略来定位伪海德拉呢？</p>
+<p>可选方案之一是让伪海德拉可以在镜面显形。PL们也许会在早期探索中就察觉到这一办法。为村民们武装手镜是一个解决方案，这也许足以遏制伪海德拉在白昼下捕食，但夜幕降临之后，猎杀仍将继续，毕竟夜间没有光线也就无法使用镜子。当然，还有一点值得注意，一座中世纪的小镇也许没有那么多手镜。</p>
+<p>猫能看到它吗？猫们也许会当它出现时躁动不安。狗……大概就什么都不知道吧。</p>
+<p>一个更有趣，也更具挑战性的方案是主动去调查那些诡异的事件。若点灯人在工作结束前就被吞噬，最后一盏还亮着的街灯就会有些不详。若PL不慎踩在一滩血迹上滑倒，PC就不得不承受为这些明显线索编造合理化理由而产生的认知失调的痛苦，但PL本人当然可以察觉其中必有蹊跷，因而去调查周边暗巷。</p>
+<br />
+<p>当然还有其他方案：由于伪海德拉的脖颈会产生实际遮挡，PL们可以通过让PC们前往不同的屋顶观察云朵之间的遮挡痕迹，利用三角定位的方式来确定脖颈具体方位。某些奇思妙想或许也行得通：例如随机地四处射箭，或是不断挥舞抓钩。</p>
+<p>如果抓钩击中了伪海德拉，心理压迫很可能只会迫使这位PC心不在焉地收回绳子并且继续挥舞它，但观察这位PC的另外一名PC将会注意到这一异常，因为这一事实与伪海德拉本身之间处于间接关系。那种歌声只能掩盖海德拉本身，而无法掩盖这位同伴违反了“击中隐形物体就立刻示警”这一誓言的古怪行为。</p>
+<p>诱饵战术同样有效，而且可能是最为简单的办法。当伪海德拉撕咬猎物，歌声就会中断，使其显形（或者准确来说是令PC们不再忽视它）。</p>
+<p>若伪海德拉受创，它很可能会主动撤回它的地下巢穴。PC们必须<em>立刻</em>将其击杀，否则它将重新开始歌唱。此后PC也许可以真正地听到这种歌声——那种来自噩梦的嚎啸。</p>
+<p>若PC们拖沓太久，将会再次遗忘自己曾经发现了伪海德拉这件事。偏执妄想（与超游认知）将会影响整场跑团，不过倒也无妨——PC们的左手会在接下来给予他们更多有用的信息，正如他们的大脑也在拼命反抗。</p>
+<p>伪海德拉的生命骰数量取决于它的成长规模，换言之，也与PC们的行动效率直接相关。这场战斗可以如同郊游一般轻松至极，当然也可以演变成一场惨烈的绞肉大战。</p>
+
+<h2>扩散</h2>
+<p>PC们选择弃城而去，任由其自生自灭；抑或是调查这件怪事时全盘失败。无论如何，最糟糕的情况发生了。</p>
+伪海德拉不会将所有人吞噬殆尽后自然死去——那太过仁慈了。事态只会持续升级。</p>
+<p>当一只伪海德拉成熟（某些典籍记载中以长出第七个头为标志）时，它将开始吟唱新的乐章。这种旋律将会从精神上奴役聆听范围内的所有生灵，就像一种大范围的<em>支配类人Dominate Person</em>。</p>
+<p>当然，PC有一次进行豁免鉴定的机会。但即使成功，他们仍会陷入全民皆敌的处境中。至此，伪海德拉的庞然巨躯终于现身：如老树般虬结粗壮的脖颈托举着那畸形诡异的头颅，高高俯瞰整座城镇，沿着屋檐棚顶蜿蜒曲折，窥视着每一扇窗户。它的咆哮穿过每一个奴仆的耳膜：“杀了那个家伙”、“抓住那个逃跑的孩童”。（它当然能口吐人言。从来都能。只是从来没有必要。）</p>
+<br />
+<p>当整座城镇被清洗殆尽，伪海德拉会命令它的奴仆挖出它已经变得臃肿肥硕的躯体。但在掘土声中，饕餮仍在继续。</p>
+随后，伪海德拉开始下令迁徙——前往新的城镇，寻找新的猎物：由奴隶们用脊背扛载，一双双颤抖的腿脚在残酷吨位的重压下踉跄前行，唯有病态狂热作为他们的食粮。当那躯体已经膨胀到无法搬运时，便以铁索拖拽，让这一坨狂嚎不止的血肉活体攻城器械碾过一切。（这亦是它的本质）</p>
+<p>当然，这种扩张难以持久。奴仆一旦脱离了伪海德拉的歌声范围就会开始逃亡，（除非他们用蜡丸塞住耳朵并回来拯救挚爱——真是令人捧腹）。除了奴仆们主动洗劫粮仓之外，基本没有食物来源。它无法组织耕作或是狩猎，毕竟这意味着将这些奴仆分散到难以控制的广袤范围。</p>
+<p>伪海德拉的成年期，通常伴随着一种绝望的侵略性。这头巨兽会像濒死的动物一般抽搐，用饥渴之躯碾碎城市与人潮。通常它会扑向最大的城市（或PC们的逃亡之地），寻求终极的食物来源。偶尔会有成功狩猎者继续成长，然后朝着下一座城市开始它的死亡巡游。</p>
+<p>“传统”战术是放火烧毁粮仓后撤出城市。在居民们离开城市前往乡下亲属处避难后，伪海德拉就会数周之内被活活饿死。派遣骑兵斥候来远距离观测伪海德拉的动向，通过旗语传递情报。大多数斥候都会选择自残双耳保证自身安全。</p>
+<p>不过这些战术在<span class="term" data-description="TFM历: 作者私设世界观森泰拉/中央之地Centerra的纪年法“火与疯狂纪元”the Time of Fire and Madness。">TFM历882年</span>夏天惨遭失败——因为当时出现了复数个伪海德拉进行了联合作战（具体数量迄今仍有争议）。</p>
+<br />
+<p>比起这场天灾，更可怕的是人祸。有一些强盗会劫掠那些携带全部家当的独行家庭；而即使在疏散令下达后，仍有一些拾荒者趁乱留在城中，结果最终沦为伪海德拉的食粮，助长它的力量。衍生的刺杀事件或是权利争斗也屡见不鲜，各方势力自然不会放过这一混乱态势为自己争权谋利。</p>
+<p>除此之外，军方也需要严格提防佣兵团、奴隶主或邪恶巫师尝试与伪海德拉进行沟通（包括信使联络）。历史上，此类勾结曾经酿成过诸多骇人惨剧。必须将这块致命癌变彻底隔离，迫使它自我吞噬。</p>
+<p>若事态发生至此，而PC们仍然想要介入，我个人推荐将叙事中心转移到这篇文章最终四个段落里提及的潜在可能性上，而非尝试正面击溃这一已经超越常理的怪物。毕竟谁会想要妄图挑战一头全盛时期的伪海德拉呢？（好吧，很多PL确实会觉得值得一试。）</p>
+
+<div class="handwritten">
+<span>最后更新于2025年3月12日。</span>
+</div>
+</div>
+
+<div class="en">
+<p><a href="https://goblinpunch.blogspot.com/2014/09/false-hydra.html">What's wrong with you? Go read the original!</a></p>
+<div class="handwritten">
+<span>Last updated March 12, 2025.</span>
+</div>
+</div>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="Lore" /><summary type="html"><![CDATA[由Arnold Kemp于2014年9月4日发布在Goblin Punch论坛上的一篇民间龙与地下城(DnD)私设文章。]]></summary></entry><entry><title type="html">关于LoreBook的设计</title><link href="https://kuzubukurozard.github.io//2025/04/24/%E5%85%B3%E4%BA%8ELoreBook%E7%9A%84%E8%AE%BE%E8%AE%A1/" rel="alternate" type="text/html" title="关于LoreBook的设计" /><published>2025-04-24T07:00:00+00:00</published><updated>2025-04-24T07:00:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/24/%E5%85%B3%E4%BA%8ELoreBook%E7%9A%84%E8%AE%BE%E8%AE%A1</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/24/%E5%85%B3%E4%BA%8ELoreBook%E7%9A%84%E8%AE%BE%E8%AE%A1/"><![CDATA[<div class="zh">
+<h2>什么是LoreBook以及可以实现的效果</h2>
+<p>写在最前面的免责说明：我对LLM的知识并不是专业的，大部分内容来源于我个人制作角色卡，以及使用各种LLM进行角色扮演中的体感，还有一些社区开发者的既有经验。阐述内容可能存在错误，如果有任何问题，请随时随意指出。</p>
+<p>以防万一，我再次重新阐述一次LLM注意力的内容：注意力机制是LLM的底层逻辑之一。即使LLM本身支持超长上下文，也会随着History的增长而逐渐丢失注意力。即使优秀的Claude、ChatGPT和Gemini也会犯这样的错误。这是无关算力、模型强度等外部因素的一个底层技术问题。</p>
+
+<h3>什么是LoreBook</h3>
+<p>LoreBook，在汉语中的直译为“传说书”，即相关设定的一个总结集。有一些设定可能与角色本身的Description部分无关，但对于让LLM理解你的整体世界观非常重要，作为一个触发锚点启用；或是以此来补充LLM的语料，起到一个外部微调的作用。</p>
+<p>例如：你可以在LLM中补充关于这个角色所在世界观的详细信息。倘若你的世界观当中存在某些更琐碎的设定，比如种族、城市、政权、宗教等详细内容，或是对于某个地域的具体描写。从性能上讲，这部分不应该加入到Description当中来分散LLM的注意力，同时也会因为内容冗长而导浪费耗过多Token。我们的预期是想要让这些信息在合适时间出现：比如提到某个种族、某个城市、某个宗教时，触发这个LoreBook条目来让LLM知道这段信息并应用到对话当中。</p>
+<p>另外一个例子：有一些更加复杂的编程效果，如果在Description当中直接导入而没有分割，也会导致LLM注意力分散而无法准确执行。最典型的就是角色卡内置的CoT，大多数复杂角色卡的CoT都是绑定在相关LoreBook当中来实现的。几乎所有的强化性功能也会如此实现：例如，用各种XML标签来包裹一些角色的细节描述，提示LLM抽取对应条目以增强文风效果；或者某些状态栏一类的代码：例如，<br />
+<blockquote>
+	<code>
+每当正文输出完毕后，在正文后方严格按照如下格式更新并输出状态栏<br />
+	--代码部分--<br />
+	</code>
+</blockquote>
+这样的代码块具有很好的LLM兼容性，大多数LLM都能正常执行。</p>
+
+<h3>给大忙人看的简易总结版</h3>
+<p>由于解释LoreBook的具体实现方式是一个非常枯燥乏味而且冗长的环节，所以我将实战部分提到了最前面来增强各位读者的“注意力”。如果你想真的系统性了解LoreBook的运作方式，也请先看完这部分，然后带着疑问继续阅读。</p>
+<ul>
+	<li><strong>CoT与功能代码：</strong>
+		<p>推荐设置：设置为常态触发（🔵），插入位置为@D，深度0，排序最大（数字最大），触发概率100%。这样可以确保这部分的内容在LLM中的注意力最大，几乎100%触发，此外不要忘记勾选防止进一步递归扫描的选项。</p>
+	</li>
+	<li><strong>角色设定增强：</strong>
+		<p>推荐设置：设置为常态触发(🔵)，插入位置为角色定义之后，排序较大，触发概率100%。作为增强角色的设定描述，贴合Description是最好的选择。</p>
+	</li>
+	<li><strong>其他项目（例如世界观设定和随机事件）：</strong>
+		<p>推荐设置：设置为关键词触发(🟢)，插入位置为@D，深度3~4，排序按顺序，触发概率100%，并且安排一个容易触发的关键词。这个顺序由你自己来决定，你觉得哪一部分的设定比较重要，你就让哪一部分更贴近底层。</p>
+	</li>
+</ul>
+<p>请牢记一个原则：关键词触发一定要足够简单。虽然这样也许不会起到节约Token的作用，但总比世界书成为摆设更好，不是吗？</p>
+<p>深度这个概念，你可以简单地理解为数字越小影响力越大。但也不要一股脑地堆在深度0处，更有层次感的堆叠会减轻LLM注意力的压力。至于顺序也起到了相似的功能，但它的数字越大，影响力越大。</p>
+
+<h2>在SillyTarvern中的完整版LoreBook的功能</h2>
+<p>LoreBook本身也是传送给LLM的Prompt之一。LoreBook能够实现的功能在前文中已经阐述过了，接下来我会说具体是如何实现这些功能的。</p>
+<ul>
+	<li><strong>插入位置：</strong>
+	<p>插入位置是指这段内容会被插入整个Prompt的何种位置。插入位置以如下几种选择作为分割点，以及他们可能会对LLM的output造成何种影响。</p>
+	   <ul>
+		    <li><strong>角色定义：</strong>角色定义就是角色的Description以及Scenario部分，插入到角色定义之后会对对话造成较大的影响。这一位置我推荐你插入一些关于角色的详细设定，例如特殊物品、强化角色特征的小介绍，因为这些紧贴角色的Description，会被LLM第二强的注意力集中点录入。</li>
+	 	    <li><strong>示例对话：</strong>示例对话是关于角色行为的指南。这部分内容其实在SillyTarvern整理的Prompt之中权重非常之低，我更推荐你将角色的行为指南整合到Description当中。我不建议你在这个部分插入任何重要的内容，因为它对LLM的影响真的很小。</li>
+		    <li><strong>作者注释：</strong>作者注释这一功能本来是为了长期聊天的角色卡节约Token而使用的。你可以在不修改角色卡本身的情况下，将前部分内容整理并插入到新一轮的对话当中。我不建议任何人使用这个功能，因为社区当中有更优秀的记忆和总结插件。而作者注释也有另外一个功能：它可以作为一个精确的锚点来决定LoreBook条目所在的位置，因此善用作者注释功能可以极大幅度增强LoreBook的效力，但由于这个需要对LLM与SillyTarvern逻辑的深度理解，所以暂时不提供关于这一部分的详细介绍。</li>
+		    <li><strong>@D：</strong>这是一个特殊的部分。如果使用这一插入位置，这部分的LoreBook会利用后续的“深度”设定来进行插入。而三个图标分别代表了它会被作为哪一部分插入：⚙️为作为System Prompt插入，👤作为User Prompt，而🤖作为AI助手的Prompt。三者有何区别我不会做过多解释，因为开发角色卡并不需要理解太多LLM的具体运作方式，只需要知道绝大多数情况下，我们都会使用System Prompt即可。</li>
+	   </ul>
+	</li>
+	<li><strong>深度与顺序：</strong>
+		<ul>
+			<li><strong>深度：</strong>深度与前文@D与作者注释有关。这一数字决定了你的LoreBook条目插入时，会位于对话的哪个位置。深度简单来说，就是从你最后一条消息开始，向上数第N条历史对话，这个N就是它在Prompt中出现的深度。换言之，深度越大，内容就会被推得越靠前，导致注意力越差。同时，深度为0就意味着它会直接插入到System Prompt之后，更贴近注意力集中的Prompt头，因此影响力也越大。</li>
+			<li><strong>顺序：</strong>顺序代表当深度或插入位置相同时，它们会以怎样的权重来<span class="term" data-description="闭嘴，不要问我深度和顺序都相同时会发生什么。我会杀了你的。">排序</span>。例如：在深度相同时，排序会按照1~1000的顺序排列在整个Prompt当中，顺序为1000 的那一条LoreBook最贴近注意力集中的Prompt尾，因此影响力也越大。</li>
+		</ul>
+	</li>
+	<li><strong>触发概率：</strong>
+		<p>这是一个我们几乎不会去考虑的项目。0意味着禁用，100%意味着一定触发，而50%就意味着会以1:1的概率触发。但……你要思考到程序随机数本身就不可靠，而且你大可以用<span class="term" data-description="比如说，请从以下条目中任选其一，将其融入到整个剧情当中。然后列出所有的可选项。">更直白的话语</span>来命令你的LLM去随机触发条目。所以我不建议你乱动这个东西，就让它是100%就好。事实上，我也没有尝试过这东西到底会起到什么作用。</p>
+	</li>
+	<li><strong>逻辑语句：</strong>
+		<p>字面意义，就是最基础的与门和非门。呃……除非你明白你在做什么，不然我不建议弄太复杂的LoreBook触发机制。LLM非常聪明，与其在这里进行外部编程，不如直接把你的需求告诉LLM，反正处理起来的算力消耗是相同的。</p>
+	</li>
+	<li><strong>其他杂七杂八的设置：</strong>
+		<ul>
+			<li><strong>粘性、冷却、延迟：</strong>字面意义，SillyTarvern当中已经有简单的描述了。但我不建议你使用这个功能，还是那句话：只要你使用的LLM足够强壮，这些东西都可以通过直白的文字来实现，除非你的规则真的很复杂，实现起来需要浪费大量的InputToken——其实，与其在SillyTarvern里外部编程，我更建议你直接写一个简单的Js脚本提供给LLM，这样也能节约很多Token，并且运行得更稳定。</li>
+		 	<li><strong>组：</strong>这是个很有趣的功能。它允许你使用更复杂的触发机制，例如触发大类别的时候，连锁触发小类别。其实本质上是一个外部编程工具，起到了节约Token的作用，和前文一样，使用自然语言或Js脚本都可以实现同样的效果，只是对于非专业人士而言，可读性会变得很差。</li>
+			<li><strong>防止递归相关的设置：</strong>基本是用于CoT的内容。因为CoT当中可能会使用一些特殊名词，为了防止误触，所以一般都会勾选防止进一步递归选项。其他的LoreBook条目除非你有特殊需求，否则我不建议你乱动这个内容。或者在关键词互相包含的触发条目中，勾选不可递归也是一个好习惯。</li>
+	  		<li><strong>全局世界书设置：</strong>恭喜你，已经你读到这里了。这意味着你即使不需要我的解释，你也可以看懂这部分的设置了——当然，我不建议你乱动其中的参数，SillyTarvern的默认参数已经足够优秀了。</li>
+		</ul>
+	</li>
+</ul>
+
+<h2>Chub当中的LoreBook</h2>
+<p>恭喜你，深呼吸一下吧，你已经读完了LoreBook的具体内容。接下来，我会介绍Chub当中LoreBook缺乏了哪些功能。如果你不想使用Chub，那么可以略过这一部分的阅读。</p>
+<ul>
+	<li><strong>基础设置：</strong>
+		<p>基础设置当中，Chub的世界书并不支持无限Token。虽然你可以随意输入，但聊天设置当中只支持最大8196的Token。这一点需要注意，所以请不要往Chub的角色卡里填入太多LoreBook内容。当然，你可以为SillyTarvern用户提供一份完整版的角色卡。</p>
+	</li>
+	<li><strong>世界书设置：</strong>
+		<p>这一部分的设置基本相同，Chub删除了一些我提到的<span class="term" data-description="粘性、延迟、组，等等。">不建议修改的内容</span>。Chub还不支持调整插入的位置，它永远默认是插入到角色定义之后的，但对于大部分角色卡来说，这是足够的了。</p>
+	</li>
+</ul>
+
+<p>关于LoreBook的介绍基本就是这样的了。具体角色书该如何编写，什么叫做格式化的代码，我也许以后会单独开一篇文章来介绍。</p>
+<p>时间太晚了……我该去睡觉了。</p>
+<div class="handwritten">
+<span>最后更新于 2025年4月25日。</span>
+</div>
+</div>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="酒馆" /><summary type="html"><![CDATA[关于LoreBook的设计，包括在Chub以及SillyTarvern两个平台。]]></summary></entry><entry><title type="html">AI角色卡的基础模板介绍</title><link href="https://kuzubukurozard.github.io//2025/04/20/AI%E8%A7%92%E8%89%B2%E5%8D%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%9D%BF%E4%BB%8B%E7%BB%8D/" rel="alternate" type="text/html" title="AI角色卡的基础模板介绍" /><published>2025-04-20T09:03:00+00:00</published><updated>2025-04-20T09:03:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/20/AI%E8%A7%92%E8%89%B2%E5%8D%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%9D%BF%E4%BB%8B%E7%BB%8D</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/20/AI%E8%A7%92%E8%89%B2%E5%8D%A1%E7%9A%84%E5%9F%BA%E7%A1%80%E6%A8%A1%E6%9D%BF%E4%BB%8B%E7%BB%8D/"><![CDATA[<div class="zh">
+<h2>关于ST酒馆本身与第三方平台之间的差别</h2>
+<p>目前基本不太考虑太过复杂的、需要用到json代码的角色卡。大模型普遍是有阅读json代码并运行的能力的，这一点从社区中JB预设里那些比较复杂的设计可以看得出来。但如果在非酒馆环境下（例如Chub等）的第三方平台，很可能会因为平台自身的限制与模型体量而使一些代码失效。模型的训练集、上下文大小、功能集成会极大程度拒绝json代码或失去编程能力，同时也存在会因为模型本身输出限制而被截断的问题。</p>
+<h3>对于Chub的已知内容</h3>
+<ul>
+	<li>免费模型Free/Moblie
+		<ul>
+			<li>多语言：几乎不支持。可以正常输出并理解，但除英语外的语料极少，更倾向与是微调前底模的自带内容(Qwen?)。</li>
+			<li>思维链：完全不支持。不会读取和生成思维链。</li>
+			<li>格式化语言：少量支持。Chub本身可以渲染内联格式的HTML，免费模型也支持生成Markdown文本，但通常因为模型output限制而丢格式。</li>
+			<li>代码能力：完全不支持。不会读任何json代码，对于HTML格式的理解能力也比较糟糕。</li>
+			<li>上下文大小：很小。基本不支持复杂的LoreBook，甚至有的时候都无法理解角色卡本身的很多内容。</li>
+			<li>总结：基本是完全的甜品，不赞成任何人使用。</li>
+	    </ul>
+	</li>
+	<li>第一档付费模型Mercruy Rec与Mercruy
+		<ul>
+			<li>多语言：几乎不支持。可以正常输出并理解，但除了字母语言之外几乎不会输出。</li>
+			<li>思维链：完全不支持。不会读取和生成思维链。</li>
+			<li>格式化语言：基本支持。可以正常输出Markdown文本和HTML代码，但同样因为上下文限制而存在一些问题。</li>
+			<li>代码能力：完全不支持。不会读任何json代码，对与HTML格式的理解能力较为普通。</li>
+			<li>上下文大小：正常。大部分角色卡都可以正常运作。在13b的Rec模型上表现得更好。</li>
+			<li>总结：可以使用，但功能性不佳。</li>
+		</ul>
+	</li>
+	<li>第二档付费模型Asha/满血版Mercruy Rec
+		<ul>
+			<li>我没用过，评价不了……但如果Asha真的有80b，那应该是可以像绝大多数LLM一样正常运作的。</li>
+		</ul>
+	</li>
+	<li>第三方平台模型
+		<ul>
+			<li>目前，Chub支持的第三方平台包括：Antropic的全部模型(Cluade系列)、OpenAI的部分模型(ChatGPT 4o之前的模型)、Google的早期模型(Gemini Pro之前的那些相当初始的版本)、NovelAI的部分模型(没用过)、OpenRouter的所有接口(只要提供了API的应该都可以使用)，以及可以自己利用Kobold搭建的开源模型。</li>
+			<li>Antropic的Claude和OpenAI的ChatGPT是我最推荐的，Google的Gemini由于太古早，我完全不建议任何人使用。OpenRouter作为一个优秀的第三方平台，Qwen等老牌开源模型和一些Hugging Face上的模型都可以自行尝试，同时也包括DeepSeek。对于中文角色卡而言，也许DeepSeek的R1和V3会是最好的选择，也是目前市面上所有开源模型里最推荐的选择。此外，经过Claude语料微调过的Gamma，以及基于DeepSeek R1训练的Tifa系模型，也是我非常推荐的选项。</li>
+			<li>虽然ChatGPT和Claude的API审核制度并没有他们提供的网页那么严格，但ChatGPT 4o及以上版本的模型都存在严格的道德限制，虽然目前Claude 3.7 Sonnet的API并没有严格道德审查，但OpenAI和Antropic的API接口都有二次审查的现象，可能会引起你的账号被封停。同时考虑到价格，我也不建议任何人使用ChatGPT和Claude进行NSFW角色扮演。</li>
+		</ul>
+	</li>
+</ul>
+<p>至于Chub本身这个聊天网站的配置，我暂时还不知道。它使用的分词器是它自己的，并不会像其他供应商那样正常计算绝大多数的Token数量，这也导致非字母语言的计算方式会<span class="term" data-description="通常来说，Chub上认为非英文字母的每一个字符都是一个Token。虽然这不影响API渠道的正常计算，但对于Chub自己的LLM服务而言，日语、中文、韩语等符号文字的Token消耗量极为庞大。">非常奇怪</span>，引起它平台的截断。总的来说，只建议在Chub上使用英语作为模型语言，其他的几乎都无法正常运行，也不要考虑任何复杂的LoreBook或代码设计。</p>
+<h2>目前我在使用的模板</h2>
+<p>角色卡模板的设计基本都来源于ST本身的推荐。值得注意的是，LoreBook部分虽然可以随意填充，但本身Chub的设置限制了最大8196Token。以及，部分LoreBook的功能在导入最新版ST当中时会发生丢失，虽然一般来说可以正常运作，但我仍然不建议任何人在LoreBook中使用太过复杂的设计。</p>
+<p>一个好的角色卡应该将主要内容，即<span class="term" data-description="模型存在注意力。即使它支持超大的上下文，但仍然会随着input的增加而逐渐遗忘一些事情，这跟LLM技术的底层逻辑有关，任何模型都存在这一问题，即使是优秀的Claude、ChatGPT或Gemini。">LLM注意力</span>最集中的Description部分，限制在1500Token以下，最佳为1000Token。使用英语可以大幅度节约Token，增强模型记忆力和准确度。极少数专有名词（例如人名、地名等）使用中文没有问题，或者，即使全部使用中文也可以，只是不建议，因为会浪费大量Token，并对LLM本身增加理解难度。——从语言学角度上来讲，不同语言之间存在不可译性，更何况存在语义漂变的情况，LLM很可能会随着History的增加而逐渐丢失对其他语言内容的注意力。</p>
+<p>基本格式为Json语言。通常来说，Json语言伴生的符号（单双引号、花括号、方括号）并不占用Token，而且一个更加类似于结构数据的文档会帮助LLM更好的理解这些内容。不一定是严格的Json语言，即，在构建角色卡的时候，只需要让Description以及其他部分看起来“像是”一个结构数据文档即可，这涉及到ST与LLM供应商的底层逻辑，各位读者只需要做到这一点即可。</p>
+<h3>设计模板</h3>
+<p><strong>第一部分：开头主要包括了一个叙述块。</strong>虽然Scenario部分的内容会被加入到Input当中，但考虑到LLM本身的注意力问题，我更倾向于将Scenario中的重要内容加入到权重更高的Description里。</p>
+<p>这部分的内容主要是告知LLM的工作与世界观设计。首先是强调故事发生的主要地点与世界观风格，例如：现代化的某国家、中世纪奇幻、日本轻小说、恐怖惊悚片，等等；然后是一段保险措施，防止LLM错误地使用不符合风格的词汇，增强世界观构建时的氛围感；最后是告知LLM的身份（叙述者），并防止其为User进行扮演。我通常也会在这部分告诉LLM应使用什么风格的语言，大多数情况下，一个用于对话的LLM，会包含较为著名的作家作品，例如《哈利波特》《冰与火之歌》《魔戒》《百年孤独》等英文名著，以及少量的中文作品或日本轻小说。这个我猜测可能和其他语言的小说翻译的流传度有关，比如说我注意到大部分近期的LLM都包含《Re0》《为美好的世界献上祝福！》之类的轻小说。</p>
+<p><strong>第二部分：对角色与世界观的主要描述。</strong>在我设计角色时，由于我倾向于给角色设计一个意外的反差，比如在Salutte当中，我先叙述了Salutte弑君叛逃的背景故事，但后面点出了Salutte其实是被贵族以爱人相胁才被迫这样做的。因此，这部分内容会分成两个块：Overview和Fact。前者是对角色与场景的总体叙述和评价，后者则是我安排的“剧情楔子”。</p>
+<p><strong>第三部分：角色描述。</strong>虽然这部分我称之为Appearance，但也包含了一些其他的内容。主要包括Age/Weight/Height/Hair/Eyes/Face/Skin/Body/Features这些项目。主要在于Body和Features上，Body通常是指角色本身的外貌如何，主要包含第一印象，<span class="term" data-description="胸部大小、体格强壮度等">更杂乱的设计</span>，以及猫耳、伤痕等一些其他的设计；Features则是关于角色性格与日常状态的设计，我个人会从着装、携带物品和<span class="term" data-description="是的，我是气味控。">身体气味</span>上来描述。</p>
+<p><strong>第四部分：角色能力。</strong>对角色的一些特殊设定进行细化。可以是魔法、战斗能力之类的描述，也可以是一些兴趣爱好或者其他方面的介绍。这部分属于是对你自己角色的主要丰满化，也是提醒你自己如何展开剧情的主要楔子。</p>
+<p><strong>第五部分：角色性格。</strong>这是对于LLM来说十分重要的部分，会影响到你的角色在LLM笔下会做出什么样的事情。首先，我不建议在Tags当中使用太极端的角色描述——例如易怒、脆弱、敏感、自卑等性格，即使你想制作一个这样的角色，也请使用更中性和温和的描述词。虽然由于ChatGPT与Claude本身存在道德检查而不易使角色滑坡，但对于大部分LLM来说，这些过于负面的词汇会导致角色变得<span class="term" data-description="尤其是DeepSeek与Gemini，他们非常容易制造意外。">歇斯底里</span>，除非你本来就想制造一个这样的角色。至于Like和Dislike比较可有可无，我更推荐你在这里加上一些角色的抽象喜好，诸如“受到夸奖”、“被人孤立”一类的社交倾向，这样也可以给LLM一个激发灵感的好契机。</p>
+<p><strong>第六部分：生活风格和角色习惯。</strong>这部分属于对你角色的外部设定，可以包括角色随身携带物品的具体介绍，居住地址，也包括了角色的人生目标、日常生活内容等等。这部分是一个比较宽泛的楔子，也是提供给你自己使用的灵感。我不推荐在这里设计太过复杂的人生目标，角色的终极目的应该放在最开始的Overview与Fact部分，或者寄存在LoreBook当中。</p>
+<p><strong>第七部分：性取向。</strong>哈哈，到了我们最喜欢的NSFW部分了。如果你的角色有特殊的……嗯，那些事情的话，你可以在这里进行细化。我一般推荐把角色设计成泛性恋，以应对User的不同身份。你知道的，我一直都在设计Anypov的角色卡。至于Kinks部分……呃，这个就由你自己来自由发挥了。</p>
+<h3>具体样式</h3>
+<p>参考我在Chub上发布的角色卡即可。</p>
+<h3>其他内容</h3>
+<p>关于Scenario：Scenario起到了与最开始的声明类似的功能。我推荐你用几个单词来简单概括你想要的文风，并且提示LLM<strong>不要</strong>做哪些事情。其实这部分的内容比较可有可无，毕竟绝大多数现代的LLM都能理解你的需求。</p>
+<p>关于Example dialogs：用于训练角色说话风格的语料，具体格式请参考ST官方提供的格式化文本。这部分内容其实相当重要，而且我推荐你将角色在不同情景下的行为举止都列出来。例如，角色的平常、喜悦、愤怒这三大情绪，以及一些特定的行为（祷告、练习、工作、上学等），当然……还有……NSFW部分。</p>
+<p>关于LoreBook的具体设计，我会在另外一篇文章里介绍。时间太晚了……</p>
+<div class="handwritten">
+<span>最后更新于 2025年4月24日。</span>
+</div>
+</div>
+<div class="en">
+<h2>Differences Between SillyTarvern and Third-Party Platforms</h2>
+<p>At present, I generally avoid using overly complex character cards that rely on JSON code. While most large language models can read and execute JSON—evident from the sophisticated JB presets shared in the community—many third-party platforms outside the Tavern (such as Chub) often fail to support this due to platform limitations and model constraints. The model’s training data, context window size, and integrated functionalities often lead to JSON being rejected or programming capabilities being lost. Moreover, output truncation due to token limits is a common issue.</p>
+<h3>Known Limitations on Chub</h3>
+<ul>
+	<li>Free/Mobile Models
+		<ul>
+			<li>Multilingual Support: Almost nonexistent. While these models can understand and output basic text, non-English corpora are extremely limited. The content seems to stem from the base model’s pre-finetuning data (possibly Qwen?).</li>
+			<li>Chain-of-Thought Reasoning: Not supported at all. These models neither interpret nor generate reasoning chains.</li>
+			<li>Formatted Language: Minimal support. Chub can render inline HTML formatting, and free models can generate Markdown, but formatting is often lost due to output limitations.</li>
+			<li>Coding Capabilities: Not supported. These models cannot read JSON and have poor comprehension of HTML structures.</li>
+			<li>Context Size: Very small. They struggle with complex LoreBooks and sometimes even fail to interpret the content of the character cards themselves.</li>
+			<li>Summary: Essentially just sweet spot. Not recommended for any serious use.</li>
+	    </ul>
+	</li>
+	<li>Tier 1 Paid Models – Mercruy Rec &amp; Mercruy
+		<ul>
+			<li>Multilingual Support: Very limited. They can parse and output text, but rarely generate anything outside alphabetic languages.</li>
+			<li>Chain-of-Thought Reasoning: Completely unsupported.</li>
+			<li>Formatted Language: Mostly supported. These models can output Markdown and HTML reliably, though still face occasional issues due to context limitations.</li>
+			<li>Coding Capabilities: Still unsupported. JSON reading is unavailable, and HTML handling is average at best.</li>
+			<li>Context Size: Reasonable. Most character cards function properly. The 13B Rec variant performs particularly well.</li>
+			<li>Summary: Usable, but limited in functionality.</li>
+		</ul>
+	</li>
+	<li>Tier 2 Paid Models – Asha / Full Power Mercruy Rec
+		<ul>
+			<li>Haven’t tested personally, so I can't comment. However, if Asha really has 80B parameters, it should function like most full-scale LLMs.</li>
+		</ul>
+	</li>
+	<li>Third-Party Platform Models
+		<ul>
+			<li>Currently, Chub supports third-party platforms such as: all models from Anthropic (Claude series), selected models from OpenAI (pre-GPT-4o), early versions of Google's models (prior to Gemini Pro), some models from NovelAI (untested by me), all endpoints on OpenRouter (any API-supported model), and self-hosted open-source models via Kobold.</li>
+			<li>I highly recommend Anthropic’s Claude and OpenAI’s ChatGPT. I do *not* recommend Google's early Gemini models due to their outdated performance. OpenRouter is a great third-party option, and users can try out classic open-source models like Qwen, various Hugging Face releases, and DeepSeek. For Chinese character cards, DeepSeek R1 and V3 are likely the best options available. Gamma, fine-tuned on Claude’s corpus, and the Tifa series trained on DeepSeek R1, are also excellent choices.</li>
+			<li>While the API reviews for ChatGPT and Claude are less strict than their official web platforms, models from GPT-4o onwards have heavy moral restrictions. Claude 3.7 Sonnet currently does not enforce strict moderation, but both OpenAI and Anthropic APIs have been known to implement post-hoc content audits, which can result in account bans. Considering the cost, I don't recommend using ChatGPT or Claude for NSFW roleplaying purposes.</li>
+		</ul>
+	</li>
+</ul>
+<p>As for the configuration of Chub as a chat platform itself, I’m still not entirely sure. It uses its own tokenizer, which doesn't count most tokens the same way as other providers do. This leads to <span class="term" data-description="Chub generally treats every non-Latin character as a single token. While this doesn’t affect normal token accounting for API-based models, it results in extremely high token consumption for Chub’s native LLM service when using character-based languages like Japanese, Chinese, or Korean.">unusual behavior</span> when handling non-Latin languages, often triggering truncation on the platform. Overall, I only recommend using English with models on Chub; most other languages won’t run reliably, and you should avoid using complex LoreBooks or code-heavy structures altogether.</p>
+<h2>The Template I'm Currently Using</h2>
+<p>The structure of my character cards is mostly based on templates recommended by ST. While the LoreBook section can technically be filled freely, Chub imposes a strict 8196-token limit. Also, some features within the LoreBook may break when imported into the latest version of ST. Although it usually still works, I don’t recommend using overly complex structures in the LoreBook.</p>
+<p>A good character card should keep the key information—i.e., the <span class="term" data-description="LLMs rely on attention mechanisms. Even if they support long contexts, they inevitably begin to &quot;forget&quot; earlier parts of the input as it grows, due to how the technology fundamentally works. This issue persists across models, even top-tier ones like Claude, ChatGPT, or Gemini.">part of the input the LLM pays the most attention to</span>, the Description—under 1500 tokens, ideally around 1000. Using English helps conserve tokens and improves memory retention and accuracy. It’s okay to keep a few terms (e.g., names, places) in Chinese, or even write the whole thing in Chinese, but it’s not recommended. It wastes tokens and increases comprehension difficulty for the model. From a linguistic perspective, different languages are not always directly translatable, and meaning can drift—an LLM may gradually lose track of non-English content as more history accumulates.</p>
+<p>The format is based on JSON-style structure. The syntactic symbols of JSON (quotes, braces, brackets) don’t usually count as tokens, and a structured format helps LLMs parse content more effectively. It doesn’t need to be strict JSON; the idea is just to make your card look like structured data, which aligns better with how ST and LLMs process input.</p>
+<h3>Template Structure</h3>
+<p><strong>Section 1: Introduction block.</strong> Although content in the Scenario field gets injected into the input, I usually integrate important Scenario details into the higher-priority Description block due to LLM attention issues.</p>
+<p>This section explains the LLM’s job and the world setting. First, I define the main setting—e.g., modern nation, medieval fantasy, Japanese light novel, horror thriller, etc. Then, I add guardrails to prevent the LLM from using out-of-style vocabulary and to strengthen the tone. Finally, I clarify the LLM’s role (e.g., narrator) and prevent it from roleplaying as the user. I also include language and stylistic notes here—since most LLMs are trained with popular literature, mentioning series like <em>Harry Potter</em>, <em>A Song of Ice and Fire</em>, <em>The Lord of the Rings</em>, or even <em>One Hundred Years of Solitude</em> helps. Light novels like <em>Re:Zero</em> or <em>KonoSuba</em> also seem to appear frequently in recent models, likely due to wide fan translation circulation.</p>
+<p><strong>Section 2: World and character summary.</strong> I usually add a twist in character design. For example, in <em>Salutte</em>, I first state that Salutte assassinated the king and fled, but later reveal it was due to a noble threatening her lover. This section is split into Overview (broad context and tone) and Fact (hidden story or plot hook).</p>
+<p><strong>Section 3: Character description.</strong> While I label this section as Appearance, it includes Age/Weight/Height/Hair/Eyes/Face/Skin/Body/Features. “Body” refers to general appearance and first impressions, <span class="term" data-description="Such as bust size, physique, etc.">more physical traits</span>, or fantasy elements like cat ears or scars. “Features” describes personality and everyday traits. I usually include clothing, carried items, and <span class="term" data-description="Yes, I’m a scent enthusiast.">scent</span>.</p>
+<p><strong>Section 4: Abilities.</strong> This expands on powers, skills, or unique traits—whether magical, combat-related, or hobbies. It helps deepen your character and gives you material for plot development.</p>
+<p><strong>Section 5: Personality.</strong> This is crucial. It determines how the LLM will portray your character. I strongly advise against using extreme descriptors in tags like “angry,” “fragile,” “sensitive,” or “insecure.” Even if that’s your goal, use neutral or softened language. While ChatGPT and Claude are safeguarded by ethical filters, most LLMs become <span class="term" data-description="Especially DeepSeek and Gemini—they’re very prone to chaotic responses.">hysterical</span> with extreme traits. Use Like/Dislike fields to indicate abstract social preferences like “being praised” or “feeling isolated”—these help spark ideas.</p>
+<p><strong>Section 6: Lifestyle and habits.</strong> This section builds external context—items they carry, where they live, goals, daily routines. It’s broad and meant for your own inspiration. Avoid overly complex life goals here; keep those in Overview/Fact or the LoreBook.</p>
+<p><strong>Section 7: Orientation.</strong> Ah yes, the NSFW bit. If your character has... special preferences, define them here. I usually default to pansexual to accommodate different user identities—I design Anypov characters, after all. As for the Kinks section... well, feel free to unleash your creativity.</p>
+<h3>Example Style</h3>
+<p>You can refer to the cards I’ve published on Chub.</p>
+<h3>Other Notes</h3>
+<p><strong>Scenario:</strong> This functions like the introduction. Use a few keywords to describe the desired tone and list what the LLM <strong>shouldn’t</strong> do. This is optional though, as most modern LLMs will understand you well enough.</p>
+<p><strong>Example Dialogs:</strong> These train the LLM to imitate the character’s speaking style. Use ST’s official format for reference. This section is important—list your character’s behavior in various moods (calm, happy, angry) and situations (praying, training, working, school), and of course... NSFW scenarios.</p>
+<p><strong>LoreBook Design:</strong> I’ll cover that in another post. It’s getting late...</p>
+<div class="handwritten">
+<span>Last updated April 24, 2025.</span>
+</div>
+</div>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="酒馆" /><summary type="html"><![CDATA[关于我正在使用的AI角色卡的模板，属于给我自己一个备忘录和开发笔记。]]></summary></entry><entry><title type="html">推送测试</title><link href="https://kuzubukurozard.github.io//2025/04/19/%E6%8E%A8%E9%80%81%E6%B5%8B%E8%AF%95/" rel="alternate" type="text/html" title="推送测试" /><published>2025-04-19T03:24:00+00:00</published><updated>2025-04-19T03:24:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/19/%E6%8E%A8%E9%80%81%E6%B5%8B%E8%AF%95</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/19/%E6%8E%A8%E9%80%81%E6%B5%8B%E8%AF%95/"><![CDATA[<p>这是一篇测试用的文档。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>
+<p>也用于测试超长文本的效果。</p>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="测试" /><summary type="html"><![CDATA[这是一篇测试用的文档。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。 也用于测试超长文本的效果。]]></summary></entry><entry><title type="html">测试文章</title><link href="https://kuzubukurozard.github.io//2025/04/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/" rel="alternate" type="text/html" title="测试文章" /><published>2025-04-18T13:01:00+00:00</published><updated>2025-04-18T13:01:00+00:00</updated><id>https://kuzubukurozard.github.io//2025/04/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0</id><content type="html" xml:base="https://kuzubukurozard.github.io//2025/04/18/%E6%B5%8B%E8%AF%95%E6%96%87%E7%AB%A0/"><![CDATA[<p class="zh">这是一篇测试用的文档。</p>
+<p class="en">This is a test text.</p>
+<p>由开源的<strong>EasyMDE</strong>构成，以及由我自己编写的<a href="/admin/index">Editor</a>生成。 </p>
+<p>它不仅支持`Markdown`格式，也支持<span style="color: blue;">HTML与CSS</span>代码。</p>
+<div class="handwritten">
+<span class="zh">最后更新于 2025年4月。</span>
+<span class="en">Last updated April 2025.</span>
+</div>]]></content><author><name>作死战士少年渣(KuzuBukuro)</name></author><category term="测试" /><summary type="html"><![CDATA[这是测试描述。]]></summary></entry></feed>

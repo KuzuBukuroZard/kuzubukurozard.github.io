@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI角色卡的基础模板介绍 - 作死战士少年渣的车站</title>
+  <link rel="shortcut icon" href="/assets/images/favicon.png">
+  <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+  <script src="/assets/js/language-switcher.js"></script>
+  <script src="/assets/js/statistics.js"></script>
+  <link rel="stylesheet" href="/assets/scss/main.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://at.alicdn.com/t/c/font_4898901_nx6so5xjq5o.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome-icons@1.6.0/css/font-awesome-icons.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<style>
+  /* 自定义中世纪装饰图标 */
+  .medieval-icon {
+    font-family: 'Times New Roman', serif;
+    font-weight: normal;
+  }
+  .medieval-icon-fleur { content: "⚜"; }
+  .medieval-icon-cross { content: "✙"; }
+  .medieval-icon-ornament { content: "❧"; }
+</style>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-inner">
+        <h1 class="site-title"><a href="/">作死战士少年渣的车站</a></h1>
+        <nav class="site-nav">
+          <input type="checkbox" id="nav-toggle" class="nav-toggle">
+          <label for="nav-toggle" class="nav-toggle-label">
+            <span></span>
+          </label>
+          <ul class="nav-menu">
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <main class="site-content">
+    <div class="container">
+      <article class="post">
+  <h1>AI角色卡的基础模板介绍</h1>
+
+  <div class="meta">
+    <span class="date">2025-04-20</span>
+    
+    <span class="categories">
+      分类:
+      
+      <a href="/category/%E9%85%92%E9%A6%86">酒馆</a>
+      
+    </span>
+    
+    <div class="language-switch">
+    <button id="zh-btn" class="lang-btn active">中文</button>
+    <button id="en-btn" class="lang-btn">English</button>
+  </div>
+    <div class="post-stats">
+      <div class="stat-item">
+        <i class="fas fa-eye"></i>
+        <span class="stat-label">阅读量：</span>
+        <span class="stat-count" id="busuanzi_value_page_pv"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="entry">
+    <div class="zh">
+<h2>关于ST酒馆本身与第三方平台之间的差别</h2>
+<p>目前基本不太考虑太过复杂的、需要用到json代码的角色卡。大模型普遍是有阅读json代码并运行的能力的，这一点从社区中JB预设里那些比较复杂的设计可以看得出来。但如果在非酒馆环境下（例如Chub等）的第三方平台，很可能会因为平台自身的限制与模型体量而使一些代码失效。模型的训练集、上下文大小、功能集成会极大程度拒绝json代码或失去编程能力，同时也存在会因为模型本身输出限制而被截断的问题。</p>
+<h3>对于Chub的已知内容</h3>
+<ul>
+	<li>免费模型Free/Moblie
+		<ul>
+			<li>多语言：几乎不支持。可以正常输出并理解，但除英语外的语料极少，更倾向与是微调前底模的自带内容(Qwen?)。</li>
+			<li>思维链：完全不支持。不会读取和生成思维链。</li>
+			<li>格式化语言：少量支持。Chub本身可以渲染内联格式的HTML，免费模型也支持生成Markdown文本，但通常因为模型output限制而丢格式。</li>
+			<li>代码能力：完全不支持。不会读任何json代码，对于HTML格式的理解能力也比较糟糕。</li>
+			<li>上下文大小：很小。基本不支持复杂的LoreBook，甚至有的时候都无法理解角色卡本身的很多内容。</li>
+			<li>总结：基本是完全的甜品，不赞成任何人使用。</li>
+	    </ul>
+	</li>
+	<li>第一档付费模型Mercruy Rec与Mercruy
+		<ul>
+			<li>多语言：几乎不支持。可以正常输出并理解，但除了字母语言之外几乎不会输出。</li>
+			<li>思维链：完全不支持。不会读取和生成思维链。</li>
+			<li>格式化语言：基本支持。可以正常输出Markdown文本和HTML代码，但同样因为上下文限制而存在一些问题。</li>
+			<li>代码能力：完全不支持。不会读任何json代码，对与HTML格式的理解能力较为普通。</li>
+			<li>上下文大小：正常。大部分角色卡都可以正常运作。在13b的Rec模型上表现得更好。</li>
+			<li>总结：可以使用，但功能性不佳。</li>
+		</ul>
+	</li>
+	<li>第二档付费模型Asha/满血版Mercruy Rec
+		<ul>
+			<li>我没用过，评价不了……但如果Asha真的有80b，那应该是可以像绝大多数LLM一样正常运作的。</li>
+		</ul>
+	</li>
+	<li>第三方平台模型
+		<ul>
+			<li>目前，Chub支持的第三方平台包括：Antropic的全部模型(Cluade系列)、OpenAI的部分模型(ChatGPT 4o之前的模型)、Google的早期模型(Gemini Pro之前的那些相当初始的版本)、NovelAI的部分模型(没用过)、OpenRouter的所有接口(只要提供了API的应该都可以使用)，以及可以自己利用Kobold搭建的开源模型。</li>
+			<li>Antropic的Claude和OpenAI的ChatGPT是我最推荐的，Google的Gemini由于太古早，我完全不建议任何人使用。OpenRouter作为一个优秀的第三方平台，Qwen等老牌开源模型和一些Hugging Face上的模型都可以自行尝试，同时也包括DeepSeek。对于中文角色卡而言，也许DeepSeek的R1和V3会是最好的选择，也是目前市面上所有开源模型里最推荐的选择。此外，经过Claude语料微调过的Gamma，以及基于DeepSeek R1训练的Tifa系模型，也是我非常推荐的选项。</li>
+			<li>虽然ChatGPT和Claude的API审核制度并没有他们提供的网页那么严格，但ChatGPT 4o及以上版本的模型都存在严格的道德限制，虽然目前Claude 3.7 Sonnet的API并没有严格道德审查，但OpenAI和Antropic的API接口都有二次审查的现象，可能会引起你的账号被封停。同时考虑到价格，我也不建议任何人使用ChatGPT和Claude进行NSFW角色扮演。</li>
+		</ul>
+	</li>
+</ul>
+<p>至于Chub本身这个聊天网站的配置，我暂时还不知道。它使用的分词器是它自己的，并不会像其他供应商那样正常计算绝大多数的Token数量，这也导致非字母语言的计算方式会<span class="term" data-description="通常来说，Chub上认为非英文字母的每一个字符都是一个Token。虽然这不影响API渠道的正常计算，但对于Chub自己的LLM服务而言，日语、中文、韩语等符号文字的Token消耗量极为庞大。">非常奇怪</span>，引起它平台的截断。总的来说，只建议在Chub上使用英语作为模型语言，其他的几乎都无法正常运行，也不要考虑任何复杂的LoreBook或代码设计。</p>
+<h2>目前我在使用的模板</h2>
+<p>角色卡模板的设计基本都来源于ST本身的推荐。值得注意的是，LoreBook部分虽然可以随意填充，但本身Chub的设置限制了最大8196Token。以及，部分LoreBook的功能在导入最新版ST当中时会发生丢失，虽然一般来说可以正常运作，但我仍然不建议任何人在LoreBook中使用太过复杂的设计。</p>
+<p>一个好的角色卡应该将主要内容，即<span class="term" data-description="模型存在注意力。即使它支持超大的上下文，但仍然会随着input的增加而逐渐遗忘一些事情，这跟LLM技术的底层逻辑有关，任何模型都存在这一问题，即使是优秀的Claude、ChatGPT或Gemini。">LLM注意力</span>最集中的Description部分，限制在1500Token以下，最佳为1000Token。使用英语可以大幅度节约Token，增强模型记忆力和准确度。极少数专有名词（例如人名、地名等）使用中文没有问题，或者，即使全部使用中文也可以，只是不建议，因为会浪费大量Token，并对LLM本身增加理解难度。——从语言学角度上来讲，不同语言之间存在不可译性，更何况存在语义漂变的情况，LLM很可能会随着History的增加而逐渐丢失对其他语言内容的注意力。</p>
+<p>基本格式为Json语言。通常来说，Json语言伴生的符号（单双引号、花括号、方括号）并不占用Token，而且一个更加类似于结构数据的文档会帮助LLM更好的理解这些内容。不一定是严格的Json语言，即，在构建角色卡的时候，只需要让Description以及其他部分看起来“像是”一个结构数据文档即可，这涉及到ST与LLM供应商的底层逻辑，各位读者只需要做到这一点即可。</p>
+<h3>设计模板</h3>
+<p><strong>第一部分：开头主要包括了一个叙述块。</strong>虽然Scenario部分的内容会被加入到Input当中，但考虑到LLM本身的注意力问题，我更倾向于将Scenario中的重要内容加入到权重更高的Description里。</p>
+<p>这部分的内容主要是告知LLM的工作与世界观设计。首先是强调故事发生的主要地点与世界观风格，例如：现代化的某国家、中世纪奇幻、日本轻小说、恐怖惊悚片，等等；然后是一段保险措施，防止LLM错误地使用不符合风格的词汇，增强世界观构建时的氛围感；最后是告知LLM的身份（叙述者），并防止其为User进行扮演。我通常也会在这部分告诉LLM应使用什么风格的语言，大多数情况下，一个用于对话的LLM，会包含较为著名的作家作品，例如《哈利波特》《冰与火之歌》《魔戒》《百年孤独》等英文名著，以及少量的中文作品或日本轻小说。这个我猜测可能和其他语言的小说翻译的流传度有关，比如说我注意到大部分近期的LLM都包含《Re0》《为美好的世界献上祝福！》之类的轻小说。</p>
+<p><strong>第二部分：对角色与世界观的主要描述。</strong>在我设计角色时，由于我倾向于给角色设计一个意外的反差，比如在Salutte当中，我先叙述了Salutte弑君叛逃的背景故事，但后面点出了Salutte其实是被贵族以爱人相胁才被迫这样做的。因此，这部分内容会分成两个块：Overview和Fact。前者是对角色与场景的总体叙述和评价，后者则是我安排的“剧情楔子”。</p>
+<p><strong>第三部分：角色描述。</strong>虽然这部分我称之为Appearance，但也包含了一些其他的内容。主要包括Age/Weight/Height/Hair/Eyes/Face/Skin/Body/Features这些项目。主要在于Body和Features上，Body通常是指角色本身的外貌如何，主要包含第一印象，<span class="term" data-description="胸部大小、体格强壮度等">更杂乱的设计</span>，以及猫耳、伤痕等一些其他的设计；Features则是关于角色性格与日常状态的设计，我个人会从着装、携带物品和<span class="term" data-description="是的，我是气味控。">身体气味</span>上来描述。</p>
+<p><strong>第四部分：角色能力。</strong>对角色的一些特殊设定进行细化。可以是魔法、战斗能力之类的描述，也可以是一些兴趣爱好或者其他方面的介绍。这部分属于是对你自己角色的主要丰满化，也是提醒你自己如何展开剧情的主要楔子。</p>
+<p><strong>第五部分：角色性格。</strong>这是对于LLM来说十分重要的部分，会影响到你的角色在LLM笔下会做出什么样的事情。首先，我不建议在Tags当中使用太极端的角色描述——例如易怒、脆弱、敏感、自卑等性格，即使你想制作一个这样的角色，也请使用更中性和温和的描述词。虽然由于ChatGPT与Claude本身存在道德检查而不易使角色滑坡，但对于大部分LLM来说，这些过于负面的词汇会导致角色变得<span class="term" data-description="尤其是DeepSeek与Gemini，他们非常容易制造意外。">歇斯底里</span>，除非你本来就想制造一个这样的角色。至于Like和Dislike比较可有可无，我更推荐你在这里加上一些角色的抽象喜好，诸如“受到夸奖”、“被人孤立”一类的社交倾向，这样也可以给LLM一个激发灵感的好契机。</p>
+<p><strong>第六部分：生活风格和角色习惯。</strong>这部分属于对你角色的外部设定，可以包括角色随身携带物品的具体介绍，居住地址，也包括了角色的人生目标、日常生活内容等等。这部分是一个比较宽泛的楔子，也是提供给你自己使用的灵感。我不推荐在这里设计太过复杂的人生目标，角色的终极目的应该放在最开始的Overview与Fact部分，或者寄存在LoreBook当中。</p>
+<p><strong>第七部分：性取向。</strong>哈哈，到了我们最喜欢的NSFW部分了。如果你的角色有特殊的……嗯，那些事情的话，你可以在这里进行细化。我一般推荐把角色设计成泛性恋，以应对User的不同身份。你知道的，我一直都在设计Anypov的角色卡。至于Kinks部分……呃，这个就由你自己来自由发挥了。</p>
+<h3>具体样式</h3>
+<p>参考我在Chub上发布的角色卡即可。</p>
+<h3>其他内容</h3>
+<p>关于Scenario：Scenario起到了与最开始的声明类似的功能。我推荐你用几个单词来简单概括你想要的文风，并且提示LLM<strong>不要</strong>做哪些事情。其实这部分的内容比较可有可无，毕竟绝大多数现代的LLM都能理解你的需求。</p>
+<p>关于Example dialogs：用于训练角色说话风格的语料，具体格式请参考ST官方提供的格式化文本。这部分内容其实相当重要，而且我推荐你将角色在不同情景下的行为举止都列出来。例如，角色的平常、喜悦、愤怒这三大情绪，以及一些特定的行为（祷告、练习、工作、上学等），当然……还有……NSFW部分。</p>
+<p>关于LoreBook的具体设计，我会在另外一篇文章里介绍。时间太晚了……</p>
+<div class="handwritten">
+<span>最后更新于 2025年4月24日。</span>
+</div>
+</div>
+<div class="en">
+<h2>Differences Between SillyTarvern and Third-Party Platforms</h2>
+<p>At present, I generally avoid using overly complex character cards that rely on JSON code. While most large language models can read and execute JSON—evident from the sophisticated JB presets shared in the community—many third-party platforms outside the Tavern (such as Chub) often fail to support this due to platform limitations and model constraints. The model’s training data, context window size, and integrated functionalities often lead to JSON being rejected or programming capabilities being lost. Moreover, output truncation due to token limits is a common issue.</p>
+<h3>Known Limitations on Chub</h3>
+<ul>
+	<li>Free/Mobile Models
+		<ul>
+			<li>Multilingual Support: Almost nonexistent. While these models can understand and output basic text, non-English corpora are extremely limited. The content seems to stem from the base model’s pre-finetuning data (possibly Qwen?).</li>
+			<li>Chain-of-Thought Reasoning: Not supported at all. These models neither interpret nor generate reasoning chains.</li>
+			<li>Formatted Language: Minimal support. Chub can render inline HTML formatting, and free models can generate Markdown, but formatting is often lost due to output limitations.</li>
+			<li>Coding Capabilities: Not supported. These models cannot read JSON and have poor comprehension of HTML structures.</li>
+			<li>Context Size: Very small. They struggle with complex LoreBooks and sometimes even fail to interpret the content of the character cards themselves.</li>
+			<li>Summary: Essentially just sweet spot. Not recommended for any serious use.</li>
+	    </ul>
+	</li>
+	<li>Tier 1 Paid Models – Mercruy Rec &amp; Mercruy
+		<ul>
+			<li>Multilingual Support: Very limited. They can parse and output text, but rarely generate anything outside alphabetic languages.</li>
+			<li>Chain-of-Thought Reasoning: Completely unsupported.</li>
+			<li>Formatted Language: Mostly supported. These models can output Markdown and HTML reliably, though still face occasional issues due to context limitations.</li>
+			<li>Coding Capabilities: Still unsupported. JSON reading is unavailable, and HTML handling is average at best.</li>
+			<li>Context Size: Reasonable. Most character cards function properly. The 13B Rec variant performs particularly well.</li>
+			<li>Summary: Usable, but limited in functionality.</li>
+		</ul>
+	</li>
+	<li>Tier 2 Paid Models – Asha / Full Power Mercruy Rec
+		<ul>
+			<li>Haven’t tested personally, so I can't comment. However, if Asha really has 80B parameters, it should function like most full-scale LLMs.</li>
+		</ul>
+	</li>
+	<li>Third-Party Platform Models
+		<ul>
+			<li>Currently, Chub supports third-party platforms such as: all models from Anthropic (Claude series), selected models from OpenAI (pre-GPT-4o), early versions of Google's models (prior to Gemini Pro), some models from NovelAI (untested by me), all endpoints on OpenRouter (any API-supported model), and self-hosted open-source models via Kobold.</li>
+			<li>I highly recommend Anthropic’s Claude and OpenAI’s ChatGPT. I do *not* recommend Google's early Gemini models due to their outdated performance. OpenRouter is a great third-party option, and users can try out classic open-source models like Qwen, various Hugging Face releases, and DeepSeek. For Chinese character cards, DeepSeek R1 and V3 are likely the best options available. Gamma, fine-tuned on Claude’s corpus, and the Tifa series trained on DeepSeek R1, are also excellent choices.</li>
+			<li>While the API reviews for ChatGPT and Claude are less strict than their official web platforms, models from GPT-4o onwards have heavy moral restrictions. Claude 3.7 Sonnet currently does not enforce strict moderation, but both OpenAI and Anthropic APIs have been known to implement post-hoc content audits, which can result in account bans. Considering the cost, I don't recommend using ChatGPT or Claude for NSFW roleplaying purposes.</li>
+		</ul>
+	</li>
+</ul>
+<p>As for the configuration of Chub as a chat platform itself, I’m still not entirely sure. It uses its own tokenizer, which doesn't count most tokens the same way as other providers do. This leads to <span class="term" data-description="Chub generally treats every non-Latin character as a single token. While this doesn’t affect normal token accounting for API-based models, it results in extremely high token consumption for Chub’s native LLM service when using character-based languages like Japanese, Chinese, or Korean.">unusual behavior</span> when handling non-Latin languages, often triggering truncation on the platform. Overall, I only recommend using English with models on Chub; most other languages won’t run reliably, and you should avoid using complex LoreBooks or code-heavy structures altogether.</p>
+<h2>The Template I'm Currently Using</h2>
+<p>The structure of my character cards is mostly based on templates recommended by ST. While the LoreBook section can technically be filled freely, Chub imposes a strict 8196-token limit. Also, some features within the LoreBook may break when imported into the latest version of ST. Although it usually still works, I don’t recommend using overly complex structures in the LoreBook.</p>
+<p>A good character card should keep the key information—i.e., the <span class="term" data-description="LLMs rely on attention mechanisms. Even if they support long contexts, they inevitably begin to &quot;forget&quot; earlier parts of the input as it grows, due to how the technology fundamentally works. This issue persists across models, even top-tier ones like Claude, ChatGPT, or Gemini.">part of the input the LLM pays the most attention to</span>, the Description—under 1500 tokens, ideally around 1000. Using English helps conserve tokens and improves memory retention and accuracy. It’s okay to keep a few terms (e.g., names, places) in Chinese, or even write the whole thing in Chinese, but it’s not recommended. It wastes tokens and increases comprehension difficulty for the model. From a linguistic perspective, different languages are not always directly translatable, and meaning can drift—an LLM may gradually lose track of non-English content as more history accumulates.</p>
+<p>The format is based on JSON-style structure. The syntactic symbols of JSON (quotes, braces, brackets) don’t usually count as tokens, and a structured format helps LLMs parse content more effectively. It doesn’t need to be strict JSON; the idea is just to make your card look like structured data, which aligns better with how ST and LLMs process input.</p>
+<h3>Template Structure</h3>
+<p><strong>Section 1: Introduction block.</strong> Although content in the Scenario field gets injected into the input, I usually integrate important Scenario details into the higher-priority Description block due to LLM attention issues.</p>
+<p>This section explains the LLM’s job and the world setting. First, I define the main setting—e.g., modern nation, medieval fantasy, Japanese light novel, horror thriller, etc. Then, I add guardrails to prevent the LLM from using out-of-style vocabulary and to strengthen the tone. Finally, I clarify the LLM’s role (e.g., narrator) and prevent it from roleplaying as the user. I also include language and stylistic notes here—since most LLMs are trained with popular literature, mentioning series like <em>Harry Potter</em>, <em>A Song of Ice and Fire</em>, <em>The Lord of the Rings</em>, or even <em>One Hundred Years of Solitude</em> helps. Light novels like <em>Re:Zero</em> or <em>KonoSuba</em> also seem to appear frequently in recent models, likely due to wide fan translation circulation.</p>
+<p><strong>Section 2: World and character summary.</strong> I usually add a twist in character design. For example, in <em>Salutte</em>, I first state that Salutte assassinated the king and fled, but later reveal it was due to a noble threatening her lover. This section is split into Overview (broad context and tone) and Fact (hidden story or plot hook).</p>
+<p><strong>Section 3: Character description.</strong> While I label this section as Appearance, it includes Age/Weight/Height/Hair/Eyes/Face/Skin/Body/Features. “Body” refers to general appearance and first impressions, <span class="term" data-description="Such as bust size, physique, etc.">more physical traits</span>, or fantasy elements like cat ears or scars. “Features” describes personality and everyday traits. I usually include clothing, carried items, and <span class="term" data-description="Yes, I’m a scent enthusiast.">scent</span>.</p>
+<p><strong>Section 4: Abilities.</strong> This expands on powers, skills, or unique traits—whether magical, combat-related, or hobbies. It helps deepen your character and gives you material for plot development.</p>
+<p><strong>Section 5: Personality.</strong> This is crucial. It determines how the LLM will portray your character. I strongly advise against using extreme descriptors in tags like “angry,” “fragile,” “sensitive,” or “insecure.” Even if that’s your goal, use neutral or softened language. While ChatGPT and Claude are safeguarded by ethical filters, most LLMs become <span class="term" data-description="Especially DeepSeek and Gemini—they’re very prone to chaotic responses.">hysterical</span> with extreme traits. Use Like/Dislike fields to indicate abstract social preferences like “being praised” or “feeling isolated”—these help spark ideas.</p>
+<p><strong>Section 6: Lifestyle and habits.</strong> This section builds external context—items they carry, where they live, goals, daily routines. It’s broad and meant for your own inspiration. Avoid overly complex life goals here; keep those in Overview/Fact or the LoreBook.</p>
+<p><strong>Section 7: Orientation.</strong> Ah yes, the NSFW bit. If your character has... special preferences, define them here. I usually default to pansexual to accommodate different user identities—I design Anypov characters, after all. As for the Kinks section... well, feel free to unleash your creativity.</p>
+<h3>Example Style</h3>
+<p>You can refer to the cards I’ve published on Chub.</p>
+<h3>Other Notes</h3>
+<p><strong>Scenario:</strong> This functions like the introduction. Use a few keywords to describe the desired tone and list what the LLM <strong>shouldn’t</strong> do. This is optional though, as most modern LLMs will understand you well enough.</p>
+<p><strong>Example Dialogs:</strong> These train the LLM to imitate the character’s speaking style. Use ST’s official format for reference. This section is important—list your character’s behavior in various moods (calm, happy, angry) and situations (praying, training, working, school), and of course... NSFW scenarios.</p>
+<p><strong>LoreBook Design:</strong> I’ll cover that in another post. It’s getting late...</p>
+<div class="handwritten">
+<span>Last updated April 24, 2025.</span>
+</div>
+</div>
+
+  </div>
+</article>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-about">
+          <h3>作死战士少年渣的车站</h3>
+          <p>作死战士少年渣的个人主页。<br> 1000个答案和1001个问题。</p>
+        </div>
+        <div class="footer-links">
+          <h3>链接</h3>
+          <ul>
+            <li><a href="/"><i class="fas fa-home"></i> 首页 Home</a></li>
+            <li><a href="/categories/"><i class="fas fa-folder"></i> 分类 Categories</a></li>
+            <li><a href="/about/"><i class="fas fa-user"></i> 关于我 AboutMe</a></li>
+          </ul>
+        </div>
+        <div class="footer-social">
+          <h3>社交媒体</h3>
+          <div class="social-icons">
+            
+            <a href="https://github.com/KuzuBukuroZard" target="_blank"><i class="fab fa-github"></i></a>
+            
+            
+            <a href="https://twitter.com/KuzuBukuroZard" target="_blank"><i class="fab fa-twitter"></i></a>
+            
+            
+            <a href="https://space.bilibili.com/5519569" target="_blank"><i class="iconfont icon-Bzhan-zard"></i></a>
+            
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom"> 
+        <p>© 2025 KuzuBukuro. All right reserved.</p>
+        <div class="footer-stats">
+          <div class="stat-item">
+            <i class="fas fa-eye"></i>
+            <span class="stat-count" id="busuanzi_value_site_pv"></span> 次经过
+          </div>
+          <div class="stat-item">
+            <i class="fas fa-user"></i>
+            <span class="stat-count" id="busuanzi_value_site_uv"></span> 位旅人
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
